@@ -27,7 +27,6 @@
     set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
     set virtualedit=onemore             " Allow for cursor beyond last character
     set history=1000                    " Store a ton of history (default is 20)
-    set spell                           " Spell checking on
     set hidden                          " Allow buffer switching without saving
 
     " Setting up the directories {
@@ -60,6 +59,9 @@
     set cursorline                  " Highlight current line
     set colorcolumn=80              " Highlight column #80
 
+
+    highlight iCursor guifg=white guibg=steelblue
+
     highlight clear SignColumn      " SignColumn should match background for
                                     " things like vim-gitgutter
 
@@ -79,6 +81,9 @@
         set statusline+=\ [%{&ff}/%Y]            " Filetype
         set statusline+=\ [%{getcwd()}]          " Current dir
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+
+        let g:airline_powerline_fonts = 1
+        let g:airline_theme = "badwolf"
     endif
 
     set backspace=indent,eol,start  " Backspace for dummies
@@ -102,6 +107,7 @@
 
 " Formatting {
 
+    set showmatch                    " Match parenthesis
     set nowrap                      " Wrap long lines
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=4                " Use indents of 4 spaces
@@ -112,7 +118,6 @@
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
     " Remove trailing whitespaces and ^M chars
-    autocmd FileType c,cpp,java,go,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     autocmd FileType go autocmd BufWritePre <buffer> Fmt
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 
@@ -131,6 +136,16 @@
     " Switch to alternative file (e.g. to .h from .cpp)
     nmap <F4> :A<cr>
     imap <F4> <ESC>:A<cr>
+
+    nmap <F5> :bn<cr>
+    imap <F5> <ESC>:bn<cr>
+    nmap <F6> :bp<cr>
+    imap <F6> <ESC>:bp<cr>
+
+    " F3 to toggle location list
+    let g:toggle_list_no_mappings = 1
+    nmap <silent> <F3> :call ToggleLocationList()<CR>
+    imap <silent> <F3> :call ToggleLocationList()<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
@@ -156,7 +171,7 @@
 
     " Shortcuts
     " Change Working Directory to that of the current file
-    cmap cwd lcd %:p:h
+    cabbr cwd lcd %:p:h
     cmap cd. lcd %:p:h
 
     " Visual shifting (does not exit Visual mode)
@@ -221,6 +236,7 @@
 
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
+        let g:ycm_global_ycm_extra_conf = '~/.config/ycm_extra_conf.py'
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
@@ -237,10 +253,53 @@
         " Automatically open and close the popup menu / preview window
         au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
         set completeopt=menu,longest
+
+        nmap <F2> :YcmCompleter GoToDefinitionElseDeclaration<cr>
+        vmap <F2> <esc>:YcmCompleter GoToDefinitionElseDeclaration<cr>
+        imap <F2> <esc>:YcmCompleter GoToDefinitionElseDeclaration<cr>
+
+        nmap <S-F2> :YcmCompleter GoToDeclaration<cr>
+        vmap <S-F2> <esc>:YcmCompleter GoToDeclaration<cr>
+        imap <S-F2> <esc>:YcmCompleter GoToDeclaration<cr>
+    " }
+    
+    " Syntastic {
+        let g:syntastic_always_populate_loc_list=1
+        let g:syntastic_auto_loc_list=0
     " }
 
     " Ctags {
+        function! SetupGoEnvironment(force)
+            if exists("s:go_project_root")
+                return
+            endif
+            let root = getcwd()
+            while root != "/"
+                if isdirectory(root."/src") 
+                    break
+                else
+                    let root = fnamemodify(root,':h')
+                endif
+            endwhile
+
+            if root == "/"
+                return
+            else
+                let s:go_project_root=root
+                let $GOPATH = s:go_project_root.":".$GOPATH
+            endif
+
+            if !exists("s:go_project_root")
+                return
+            endif
+            if (!filereadable(s:go_project_root)) || (&force)
+                execute "!gotags -silent -sort $(find $(echo $GOPATH $GOROOT | tr ':' ' ') -name '*.go') >".s:go_project_root."/tags &"
+            endif
+        endfunction
+
         set tags=./tags;/,~/.vimtags
+        au BufWritePost *.go silent! call SetupGoEnvironment(1)
+        autocmd BufNewFile,BufRead *.go call SetupGoEnvironment(0)
     " }
 
     " AutoCloseTag {
@@ -268,12 +327,6 @@
         let NERDTreeShowHidden=1
         let NERDTreeKeepTreeInNewTab=1
         let g:nerdtree_tabs_open_on_gui_startup=0
-    " }
-
-    " MiniBufExpl {
-        nmap <F2> :MBEToggle<cr>
-        vmap <F2> <esc>:MBEToggle<cr>
-        imap <F2> <esc>:MBEToggle<cr>
     " }
 
     " Tabularize {
@@ -315,6 +368,8 @@
             \ 'dir':  '\.git$\|\.hg$\|\.svn$',
             \ 'file': '\.exe$\|\.so$\|\.dll$' }
 
+        let g:ctrlp_extensions = ['tag']
+
         let g:ctrlp_user_command = {
             \ 'types': {
                 \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
@@ -322,6 +377,8 @@
             \ },
             \ 'fallback': 'find %s -type f'
         \ }
+
+        nmap <S-K> :CtrlPTag<CR>
     "}
 
     " TagBar {
@@ -329,6 +386,10 @@
         nmap <F8> :TagbarToggle<cr>
         vmap <F8> <esc>:TagbarToggle<cr>
         imap <F8> <esc>:TagbarToggle<cr>
+
+        let g:tagbar_left = 1
+        let g:tagbar_autofocus = 1
+        let g:tagbar_compact = 1
         "Golang support for tagbar
         let g:tagbar_type_go = {
             \ 'ctagstype' : 'go',
@@ -408,7 +469,7 @@
     if has('gui_running')
         set guioptions-=T           " Remove the toolbar
         set lines=40                " 40 lines of text instead of 24
-        set guifont=Ubuntu\ Mono\ Regular\ 16,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
+        set guifont=Ubuntu\ Mono\ Regular\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
     else
         if &term == 'xterm' || &term == 'screen'
             set t_Co=256            " Enable 256 colors to stop the CSApprox warning and make xterm vim shine
@@ -486,24 +547,6 @@
     endfunction
     " }
 
-    " Strip whitespace {
-    function! StripTrailingWhitespace()
-        " To disable the stripping of whitespace, add the following to your
-        " .vimrc.local file:
-        "   let g:spf13_keep_trailing_whitespace = 1
-        if !exists('g:spf13_keep_trailing_whitespace')
-            " Preparation: save last search, and cursor position.
-            let _s=@/
-            let l = line(".")
-            let c = col(".")
-            " do the business:
-            %s/\s\+$//e
-            " clean up: restore previous search history, and cursor position
-            let @/=_s
-            call cursor(l, c)
-        endif
-    endfunction
-    " }
     function SophHelp()
         if &buftype=="help" && match( strpart( getline("."), col(".")-1,1), "\\S")<0
             bw
