@@ -22,13 +22,14 @@
             let g:ackprg = 'ag --nogroup --nocolor --column'
         endif
 
-    let g:spf13_bundle_groups=['general', 'youcompleteme', 'programming', 'python', 'go', 'javascript', 'html', 'scala' ]
+    let g:spf13_bundle_groups=['general', 'youcompleteme', 'programming', 'python', 'go', 'javascript', 'html', 'scala', 'perl' ]
 
 
     " General {
         if count(g:spf13_bundle_groups, 'general')
             Bundle 'scrooloose/nerdtree'
             Bundle 'altercation/vim-colors-solarized'
+            Bundle 'Matt-Deacalion/vim-systemd-syntax'
             Bundle 'spf13/vim-colors'
             Bundle 'tpope/vim-surround'
             Bundle 'kien/ctrlp.vim'
@@ -42,11 +43,11 @@
                 "Bundle 'Lokaltog/vim-powerline'
             "endif
 
+            Bundle 'kien/rainbow_parentheses.vim'
             Bundle 'Lokaltog/vim-easymotion'
             Bundle 'jistr/vim-nerdtree-tabs'
             Bundle 'flazz/vim-colorschemes'
             Bundle 'mbbill/undotree'
-            Bundle 'nathanaelkane/vim-indent-guides'
             if !exists('g:spf13_no_views')
                 Bundle 'vim-scripts/restore_view.vim'
             endif
@@ -55,6 +56,7 @@
             Bundle 'vim-scripts/XML-Folding'
             Bundle 'thirtythreeforty/lessspace.vim'
 "            Bundle 'fholgado/minibufexpl.vim'
+            Bundle 'kopischke/vim-fetch'
         endif
     " }
     "
@@ -64,6 +66,7 @@
             Bundle 'scrooloose/syntastic'
             Bundle 'milkypostman/vim-togglelist'
             Bundle 'tpope/vim-fugitive'
+            Bundle 'juneedahamed/svnj.vim'
             Bundle 'mattn/webapi-vim'
             Bundle 'mattn/gist-vim'
             Bundle 'scrooloose/nerdcommenter'
@@ -71,6 +74,8 @@
             Bundle 'a.vim'
             if executable('ctags')
                 Bundle 'majutsushi/tagbar'
+                Bundle 'xolox/vim-misc'
+                Bundle 'xolox/vim-easytags'
             endif
         endif
     " }
@@ -102,10 +107,15 @@
     " Python {
         if count(g:spf13_bundle_groups, 'python')
             " Pick either python-mode or pyflakes & pydoc
-            Bundle 'klen/python-mode'
             Bundle 'python.vim'
             Bundle 'python_match.vim'
             Bundle 'pythoncomplete'
+            Bundle 'tell-k/vim-autopep8'
+        endif
+    " }
+
+    " Perl {
+        if count(g:spf13_bundle_groups, 'perl')
         endif
     " }
 

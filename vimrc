@@ -9,6 +9,8 @@
 "}
 
 " General {
+    set t_Co=256                " Force use 256 color terminal
+    set term=xterm-256color
 
     set background=dark         " Assume a dark background
     filetype plugin indent on   " Automatically detect file types.
@@ -28,6 +30,7 @@
     set virtualedit=onemore             " Allow for cursor beyond last character
     set history=1000                    " Store a ton of history (default is 20)
     set hidden                          " Allow buffer switching without saving
+    set nospell
 
     " Setting up the directories {
         set backup                  " Backups are nice ...
@@ -57,7 +60,7 @@
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
-    set colorcolumn=80              " Highlight column #80
+    set colorcolumn=140              " Highlight column #80
 
 
     highlight iCursor guifg=white guibg=steelblue
@@ -110,10 +113,11 @@
     set showmatch                    " Match parenthesis
     set nowrap                      " Wrap long lines
     set autoindent                  " Indent at the same level of the previous line
-    set shiftwidth=4                " Use indents of 4 spaces
+    set shiftwidth=2                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
-    set tabstop=4                   " An indentation every four columns
-    set softtabstop=4               " Let backspace delete indent
+    set smarttab
+    set tabstop=2                   " An indentation every four columns
+    set softtabstop=2               " Let backspace delete indent
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
@@ -137,10 +141,8 @@
     nmap <F4> :A<cr>
     imap <F4> <ESC>:A<cr>
 
-    nmap <F5> :bn<cr>
-    imap <F5> <ESC>:bn<cr>
-    nmap <F6> :bp<cr>
-    imap <F6> <ESC>:bp<cr>
+    nmap <F6> :bn<cr>
+    imap <F6> <ESC>:bn<cr>
 
     " F3 to toggle location list
     let g:toggle_list_no_mappings = 1
@@ -179,7 +181,7 @@
     vnoremap > >gv
 
     " For when you forget to sudo. Really Write the file.
-    cabbr W w !sudo tee % >/dev/null
+    command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
     " Some helpers to edit mode
     " http://vimcasts.org/e/14
@@ -223,6 +225,7 @@
 
     " Misc {
         let g:NERDShutUp=1
+        let g:NERDSpaceDelims = 1
         let b:match_ignorecase = 1
     " }
 
@@ -236,7 +239,7 @@
 
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
-        let g:ycm_global_ycm_extra_conf = '~/.config/ycm_extra_conf.py'
+        let g:ycm_global_ycm_extra_conf = "/home/blackjack/.config/ycm_extra_conf.py"
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
@@ -266,6 +269,13 @@
     " Syntastic {
         let g:syntastic_always_populate_loc_list=1
         let g:syntastic_auto_loc_list=0
+        let g:syntastic_python_flake8_args='--ignore=E501,E225,E111,E114'
+        let g:syntastic_enable_signs = 1
+        let g:syntastic_enable_balloons = 0
+        let g:syntastic_enable_highlighting = 0
+        let g:autopep8_max_line_length=140
+        let g:autopep8_indent_size=2
+        let g:autopep8_disable_show_diff=1
     " }
 
     " Ctags {
@@ -354,13 +364,8 @@
         nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
     " }
 
-    " PyMode {
-        let g:pymode_lint_checker = "pyflakes"
-        let g:pymode_utils_whitespaces = 0
-        let g:pymode_options = 0
-    " }
-
     " ctrlp {
+        let g:ctrlp_cmd = 'CtrlPMRU'
         let g:ctrlp_working_path_mode = 2
         nnoremap <silent> <D-t> :CtrlP<CR>
         nnoremap <silent> <D-r> :CtrlPMRU<CR>
@@ -419,13 +424,6 @@
             \ 'ctagsargs' : '-sort -silent'
         \ }
     "}
-
-    " PythonMode {
-    " Disable if python support not present
-        if !has('python')
-            let g:pymode = 1
-        endif
-    " }
 
     " Completion {
         " <TAB>: completion.
