@@ -181,6 +181,8 @@
     vnoremap < <gv
     vnoremap > >gv
 
+    map <leader>ff :%!python -m json.tool<CR>
+
     " For when you forget to sudo. Really Write the file.
     command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 

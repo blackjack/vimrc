@@ -22,164 +22,71 @@
             let g:ackprg = 'ag --nogroup --nocolor --column'
         endif
 
-    let g:spf13_bundle_groups=['general', 'youcompleteme', 'programming', 'python', 'go', 'javascript', 'html', 'scala', 'perl' ]
-
-
     " General {
-        if count(g:spf13_bundle_groups, 'general')
-            Bundle 'scrooloose/nerdtree'
-            Bundle 'altercation/vim-colors-solarized'
-            Bundle 'Matt-Deacalion/vim-systemd-syntax'
-            Bundle 'spf13/vim-colors'
-            Bundle 'tpope/vim-surround'
-            Bundle 'kien/ctrlp.vim'
-            Bundle 'vim-scripts/sessionman.vim'
-            Bundle 'matchit.zip'
-            Bundle 'bling/vim-bufferline'
-            Bundle 'bling/vim-airline'
-            "if (has("python") || has("python3")) && !exists('g:spf13_use_old_powerline')
-                "Bundle 'Lokaltog/powerline', {'rtp':'/powerline/bindings/vim'}
-            "else
-                "Bundle 'Lokaltog/vim-powerline'
-            "endif
-
-            Bundle 'kien/rainbow_parentheses.vim'
-            Bundle 'Lokaltog/vim-easymotion'
-            Bundle 'jistr/vim-nerdtree-tabs'
-            Bundle 'flazz/vim-colorschemes'
-            Bundle 'mbbill/undotree'
-            if !exists('g:spf13_no_views')
-                Bundle 'vim-scripts/restore_view.vim'
-            endif
-            Bundle 'airblade/vim-gitgutter'
-            Bundle 'tpope/vim-abolish.git'
-            Bundle 'vim-scripts/XML-Folding'
-            Bundle 'thirtythreeforty/lessspace.vim'
-"            Bundle 'fholgado/minibufexpl.vim'
-            Bundle 'kopischke/vim-fetch'
-        endif
+          Bundle 'scrooloose/nerdtree'
+          Bundle 'altercation/vim-colors-solarized'
+          Bundle 'Matt-Deacalion/vim-systemd-syntax'
+          Bundle 'spf13/vim-colors'
+          Bundle 'tpope/vim-surround'
+          Bundle 'kien/ctrlp.vim'
+          Bundle 'vim-scripts/sessionman.vim'
+          Bundle 'matchit.zip'
+          Bundle 'bling/vim-bufferline'
+          Bundle 'bling/vim-airline'
+          Bundle 'kien/rainbow_parentheses.vim'
+          Bundle 'Lokaltog/vim-easymotion'
+          Bundle 'jistr/vim-nerdtree-tabs'
+          Bundle 'mbbill/undotree'
+          Bundle 'vim-scripts/restore_view.vim'
+          Bundle 'airblade/vim-gitgutter'
+          Bundle 'thirtythreeforty/lessspace.vim'
+          Bundle 'kopischke/vim-fetch'
     " }
     "
     " General Programming {
-        if count(g:spf13_bundle_groups, 'programming')
-            " Pick one of the checksyntax, jslint, or syntastic
-            Bundle 'scrooloose/syntastic'
-            Bundle 'milkypostman/vim-togglelist'
-            Bundle 'tpope/vim-fugitive'
-            Bundle 'juneedahamed/svnj.vim'
-            Bundle 'mattn/webapi-vim'
-            Bundle 'mattn/gist-vim'
-            Bundle 'scrooloose/nerdcommenter'
-            Bundle 'godlygeek/tabular'
-            Bundle 'a.vim'
-            if executable('ctags')
-                Bundle 'majutsushi/tagbar'
-                Bundle 'xolox/vim-misc'
-                Bundle 'xolox/vim-easytags'
-            endif
-        endif
+          Bundle 'scrooloose/syntastic'
+          Bundle 'milkypostman/vim-togglelist'
+          Bundle 'tpope/vim-fugitive'
+          Bundle 'juneedahamed/svnj.vim'
+          Bundle 'mattn/webapi-vim'
+          Bundle 'mattn/gist-vim'
+          Bundle 'scrooloose/nerdcommenter'
+          Bundle 'godlygeek/tabular'
+          Bundle 'a.vim'
+          Bundle 'majutsushi/tagbar'
+          Bundle 'xolox/vim-misc'
+          Bundle 'xolox/vim-easytags'
     " }
 
     " Snippets & AutoComplete {
-        if count(g:spf13_bundle_groups, 'snipmate')
-            Bundle 'garbas/vim-snipmate'
-            Bundle 'honza/vim-snippets'
-            " Source support_function.vim to support vim-snippets.
-            if filereadable(expand("~/.vim/bundle/vim-snippets/snippets/support_functions.vim"))
-                source ~/.vim/bundle/vim-snippets/snippets/support_functions.vim
-            endif
-        elseif count(g:spf13_bundle_groups, 'neocomplcache')
-            Bundle 'Shougo/neocomplcache'
-            Bundle 'Shougo/neosnippet'
-            Bundle 'honza/vim-snippets'
-        elseif count(g:spf13_bundle_groups, 'youcompleteme')
-            Bundle 'Valloric/YouCompleteMe'
-        endif
-    " }
-
-    " PHP {
-        if count(g:spf13_bundle_groups, 'php')
-            Bundle 'spf13/PIV'
-            Bundle 'arnaud-lb/vim-php-namespace'
-        endif
+          Bundle 'Valloric/YouCompleteMe'
     " }
 
     " Python {
-        if count(g:spf13_bundle_groups, 'python')
-            " Pick either python-mode or pyflakes & pydoc
-            Bundle 'python.vim'
-            Bundle 'python_match.vim'
-            Bundle 'pythoncomplete'
-            Bundle 'tell-k/vim-autopep8'
-        endif
+          Bundle 'python.vim'
+          Bundle 'python_match.vim'
+          Bundle 'pythoncomplete'
+          Bundle 'tell-k/vim-autopep8'
     " }
 
-    " Perl {
-        if count(g:spf13_bundle_groups, 'perl')
-        endif
-    " }
-
-    " Javascript {
-        if count(g:spf13_bundle_groups, 'javascript')
-            Bundle 'leshill/vim-json'
-            Bundle 'groenewege/vim-less'
-            Bundle 'pangloss/vim-javascript'
-            Bundle 'briancollins/vim-jst'
-            Bundle 'kchmck/vim-coffee-script'
-        endif
-    " }
-
-    " Java {
-        if count(g:spf13_bundle_groups, 'scala')
-            Bundle 'derekwyatt/vim-scala'
-            Bundle 'derekwyatt/vim-sbt'
-        endif
-    " }
 
     " HTML {
-        if count(g:spf13_bundle_groups, 'html')
-            Bundle 'amirh/HTML-AutoCloseTag'
-            Bundle 'hail2u/vim-css3-syntax'
-            Bundle 'tpope/vim-haml'
-        endif
-    " }
-
-    " Ruby {
-        if count(g:spf13_bundle_groups, 'ruby')
-            Bundle 'tpope/vim-rails'
-            let g:rubycomplete_buffer_loading = 1
-            "let g:rubycomplete_classes_in_global = 1
-            "let g:rubycomplete_rails = 1
-        endif
+          Bundle 'amirh/HTML-AutoCloseTag'
+          Bundle 'hail2u/vim-css3-syntax'
+          Bundle 'tpope/vim-haml'
     " }
 
     " Go Lang {
-        if count(g:spf13_bundle_groups, 'go')
-            Bundle 'jnwhiteh/vim-golang'
-            Bundle 'spf13/vim-gocode'
-        endif
+          Bundle 'jnwhiteh/vim-golang'
+          Bundle 'spf13/vim-gocode'
     " }
 
     " Misc {
-        if count(g:spf13_bundle_groups, 'misc')
-            Bundle 'tpope/vim-markdown'
-            Bundle 'spf13/vim-preview'
-            Bundle 'tpope/vim-cucumber'
-            Bundle 'quentindecock/vim-cucumber-align-pipes'
-            Bundle 'Puppet-Syntax-Highlighting'
-        endif
-    " }
-
-    " Twig {
-        if count(g:spf13_bundle_groups, 'twig')
-            Bundle 'beyondwords/vim-twig'
-        endif
-    " }
-    
-    " CoVim {
-        if count(g:spf13_bundle_groups, 'covim')
-            Bundle 'FredKSchott/CoVim'
-        endif
+          Bundle 'tpope/vim-markdown'
+          Bundle 'spf13/vim-preview'
+          Bundle 'Puppet-Syntax-Highlighting'
+          Bundle 'vim-scripts/XML-Folding'
+          Bundle 'elzr/vim-json'
     " }
 
 " }
