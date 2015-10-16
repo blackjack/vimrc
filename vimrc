@@ -25,12 +25,13 @@
         set clipboard=unnamed
     endif
 
-    set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
+    set shortmess+=filmnrxoOtT           " Abbrev. of messages (avoids 'hit enter')
     set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
-    set virtualedit=onemore             " Allow for cursor beyond last character
-    set history=1000                    " Store a ton of history (default is 20)
-    set hidden                          " Allow buffer switching without saving
-    set nospell
+    set virtualedit=onemore              " Allow for cursor beyond last character
+    set history=1000                     " Store a ton of history (default is 20)
+    set hidden                           " Allow buffer switching without saving
+    set nospell                          " Disable spelling (very confusing)
+    autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
 
     " Setting up the directories {
         set backup                  " Backups are nice ...
