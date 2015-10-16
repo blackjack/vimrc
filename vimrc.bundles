@@ -53,9 +53,11 @@
           Bundle 'scrooloose/nerdcommenter'
           Bundle 'godlygeek/tabular'
           Bundle 'a.vim'
-          Bundle 'majutsushi/tagbar'
-          Bundle 'xolox/vim-misc'
-          Bundle 'xolox/vim-easytags'
+          if executable('ctags')
+              Bundle 'majutsushi/tagbar'
+              Bundle 'xolox/vim-misc'
+              Bundle 'xolox/vim-easytags'
+          endif
     " }
 
     " Snippets & AutoComplete {
