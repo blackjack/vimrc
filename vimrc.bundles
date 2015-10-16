@@ -31,7 +31,6 @@
           Bundle 'kien/ctrlp.vim'
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
-          Bundle 'bling/vim-bufferline'
           Bundle 'bling/vim-airline'
           Bundle 'kien/rainbow_parentheses.vim'
           Bundle 'Lokaltog/vim-easymotion'
@@ -52,7 +51,7 @@
           Bundle 'mattn/gist-vim'
           Bundle 'scrooloose/nerdcommenter'
           Bundle 'godlygeek/tabular'
-          Bundle 'a.vim'
+          Bundle 'derekwyatt/vim-fswitch'
           if executable('ctags')
               Bundle 'majutsushi/tagbar'
               Bundle 'xolox/vim-misc'

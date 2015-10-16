@@ -88,6 +88,9 @@
 
         let g:airline_powerline_fonts = 1
         let g:airline_theme = "badwolf"
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tabline#left_sep = ' '
+        let g:airline#extensions#tabline#left_alt_sep = '|'
     endif
 
     set backspace=indent,eol,start  " Backspace for dummies
@@ -139,11 +142,13 @@
 
 
     " Switch to alternative file (e.g. to .h from .cpp)
-    nmap <F4> :A<cr>
-    imap <F4> <ESC>:A<cr>
+    nmap <F4> :silent! FSHere<CR>
+    imap <F4> <ESC>:silent! FSHere<CR>
 
-    nmap <F6> :bn<cr>
-    imap <F6> <ESC>:bn<cr>
+    nmap <F5> :bp<CR>
+    imap <F5> <ESC>:bp<CR>
+    nmap <F6> :bn<CR>
+    imap <F6> <ESC>:bn<CR>
 
     " F3 to toggle location list
     let g:toggle_list_no_mappings = 1
@@ -329,8 +334,11 @@
         endfunction
 
         set tags=./tags;/,~/.vimtags
-        au BufWritePost *.go silent! call SetupGoEnvironment(1)
-        autocmd BufNewFile,BufRead *.go call SetupGoEnvironment(0)
+
+        if executable('gotags')
+            au BufWritePost *.go silent! call SetupGoEnvironment(1)
+            autocmd BufNewFile,BufRead *.go call SetupGoEnvironment(0)
+        endif
     " }
 
     " AutoCloseTag {
