@@ -223,6 +223,26 @@
         let g:PIVAutoClose = 0
     " }
 
+    " PIV {
+        au VimEnter * RainbowParenthesesToggle
+        au Syntax * RainbowParenthesesLoadRound
+        au Syntax * RainbowParenthesesLoadSquare
+        au Syntax * RainbowParenthesesLoadBraces
+        let g:rbpt_colorpairs = [
+                    \ ['white',       'RoyalBlue3'],
+                    \ ['darkgreen',   'firebrick3'],
+                    \ ['darkcyan',    'RoyalBlue3'],
+                    \ ['darkred',     'SeaGreen3'],
+                    \ ['darkmagenta', 'DarkOrchid3'],
+                    \ ['brown',       'firebrick3'],
+                    \ ['gray',        'RoyalBlue3'],
+                    \ ['black',       'SeaGreen3'],
+                    \ ['darkmagenta', 'DarkOrchid3'],
+                    \ ['darkcyan',    'SeaGreen3'],
+                    \ ['darkred',     'DarkOrchid3'],
+                    \ ['red',         'firebrick3'],
+                    \ ]
+    " }
     " Misc {
         let g:NERDShutUp=1
         let g:NERDSpaceDelims = 1
