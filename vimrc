@@ -259,7 +259,7 @@
 
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
-        let g:ycm_global_ycm_extra_conf = "/home/blackjack/.config/ycm_extra_conf.py"
+        let g:ycm_global_ycm_extra_conf = "/home/blackjack/.vim/ycm_extra_conf.py"
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
