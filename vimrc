@@ -333,12 +333,16 @@
             endif
         endfunction
 
-        set tags=./tags;/,~/.vimtags
+        set tags=~/.vimtags
 
         if executable('gotags')
             au BufWritePost *.go silent! call SetupGoEnvironment(1)
             autocmd BufNewFile,BufRead *.go call SetupGoEnvironment(0)
         endif
+
+        " Disable tags highlighting (makes Vim very laggy)
+        let g:easytags_dynamic_files = 2
+        let b:easytags_auto_highlight = 0
     " }
 
     " AutoCloseTag {
@@ -349,8 +353,7 @@
 
     " SnipMate {
         " Setting the author var
-        " If forking, please overwrite in your .vimrc.local file
-        let g:snips_author = 'Steve Francia <steve.francia@gmail.com>'
+        let g:snips_author = 'Oleksandr Senkovych <bjsenya@gmail.com>'
     " }
 
     " NerdTree {
