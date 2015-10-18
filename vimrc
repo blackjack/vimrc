@@ -255,13 +255,6 @@
     " }
 
     " OmniComplete {
-        if has("autocmd") && exists("+omnifunc")
-            autocmd Filetype *
-                \if &omnifunc == "" |
-                \setlocal omnifunc=syntaxcomplete#Complete |
-                \endif
-        endif
-
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
         let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
@@ -304,44 +297,7 @@
     " }
 
     " Ctags {
-        function! SetupGoEnvironment(force)
-            if exists("s:go_project_root")
-                return
-            endif
-            let root = getcwd()
-            while root != "/"
-                if isdirectory(root."/src") 
-                    break
-                else
-                    let root = fnamemodify(root,':h')
-                endif
-            endwhile
-
-            if root == "/"
-                return
-            else
-                let s:go_project_root=root
-                if !empty($GOPATH)
-                    let $GOPATH = s:go_project_root.":".$GOPATH
-                else
-                    let $GOPATH = s:go_project_root
-                endif
-            endif
-
-            if !exists("s:go_project_root")
-                return
-            endif
-            if (!filereadable(s:go_project_root)) || (&force)
-                silent exec "!gotags -silent -sort $(find -L $(echo $GOPATH $GOROOT | tr ':' ' ') -name '*.go') >".s:go_project_root."/tags &"
-            endif
-        endfunction
-
         set tags=~/.vimtags
-
-        if executable('gotags')
-            au BufWritePost *.go silent! call SetupGoEnvironment(1)
-            autocmd BufNewFile,BufRead *.go call SetupGoEnvironment(0)
-        endif
 
         " Disable tags highlighting (makes Vim very laggy)
         let g:easytags_dynamic_files = 2

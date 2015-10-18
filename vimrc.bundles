@@ -79,7 +79,7 @@
 
     " Go Lang {
           Bundle 'fatih/vim-go'
-          Bundle 'nsf/gocode'
+          Plugin 'nsf/gocode', {'rtp': 'vim/'}
     " }
 
     " Misc {
