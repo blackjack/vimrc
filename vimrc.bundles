@@ -78,8 +78,8 @@
     " }
 
     " Go Lang {
-          Bundle 'jnwhiteh/vim-golang'
-          Bundle 'spf13/vim-gocode'
+          Bundle 'fatih/vim-go'
+          Bundle 'nsf/gocode'
     " }
 
     " Misc {

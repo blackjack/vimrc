@@ -126,7 +126,6 @@
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
     " Remove trailing whitespaces and ^M chars
-    autocmd FileType go autocmd BufWritePre <buffer> Fmt
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 
 " }
@@ -265,7 +264,8 @@
 
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
-        let g:ycm_global_ycm_extra_conf = "/home/blackjack/.vim/ycm_extra_conf.py"
+        let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
+        let g:ycm_collect_identifiers_from_tags_files = 1
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
@@ -283,13 +283,12 @@
         au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
         set completeopt=menu,longest
 
-        nmap <F2> :YcmCompleter GoToDefinitionElseDeclaration<cr>
-        vmap <F2> <esc>:YcmCompleter GoToDefinitionElseDeclaration<cr>
-        imap <F2> <esc>:YcmCompleter GoToDefinitionElseDeclaration<cr>
+        autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
+        autocmd FileType go let b:gotofunc="GoDef"
 
-        nmap <S-F2> :YcmCompleter GoToDeclaration<cr>
-        vmap <S-F2> <esc>:YcmCompleter GoToDeclaration<cr>
-        imap <S-F2> <esc>:YcmCompleter GoToDeclaration<cr>
+        nmap <F2> :call Goto()<CR>
+        vmap <F2> <esc>:call Goto()<CR>
+        imap <F2> <esc>:call Goto()<CR>
     " }
     
     " Syntastic {
@@ -322,14 +321,18 @@
                 return
             else
                 let s:go_project_root=root
-                let $GOPATH = s:go_project_root.":".$GOPATH
+                if !empty($GOPATH)
+                    let $GOPATH = s:go_project_root.":".$GOPATH
+                else
+                    let $GOPATH = s:go_project_root
+                endif
             endif
 
             if !exists("s:go_project_root")
                 return
             endif
             if (!filereadable(s:go_project_root)) || (&force)
-                execute "!gotags -silent -sort $(find $(echo $GOPATH $GOROOT | tr ':' ' ') -name '*.go') >".s:go_project_root."/tags &"
+                silent exec "!gotags -silent -sort $(find -L $(echo $GOPATH $GOROOT | tr ':' ' ') -name '*.go') >".s:go_project_root."/tags &"
             endif
         endfunction
 
@@ -581,15 +584,23 @@
         if &buftype=="help" && match( strpart( getline("."), col(".")-1,1), "\\S")<0
             bw
         else
-            try
-                exec "help ".expand("<cWORD>")
-            catch /:E149:\|:E661:/
-                " E149 no help for <subject>
-                " E661 no <language> help for <subject>
-                exec "help ".expand("<cword>")
-            endtry
+            if exists('b:helpfunc')
+                let l:helpfunc=b:helpfunc
+            else
+                let l:helpfunc="help ".expand("<cword>")
+            endif
+
+            exec l:helpfunc
         endif
     endfunc
+
+    fun! Goto()
+        if exists("b:gotofunc")
+            exec b:gotofunc
+        else
+            normal <C-]>
+        endif
+    endfun
 " }
 
 " Finish local initializations {
