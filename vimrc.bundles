@@ -81,13 +81,18 @@
           Bundle 'fatih/vim-go'
           Plugin 'nsf/gocode', {'rtp': 'vim/'}
     " }
+    "
+    " Rust {
+          Plugin 'rust-lang/rust.vim'
+          Plugin 'racer-rust/vim-racer'
+    " }
 
     " Misc {
           Bundle 'tpope/vim-markdown'
           Bundle 'spf13/vim-preview'
           Bundle 'Puppet-Syntax-Highlighting'
-          Bundle 'vim-scripts/XML-Folding'
           Bundle 'elzr/vim-json'
+          Bundle 'chrisbra/csv.vim'
     " }
 
 " }

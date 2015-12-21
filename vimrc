@@ -278,6 +278,7 @@
 
         autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
         autocmd FileType go let b:gotofunc="GoDef"
+        autocmd FileType rust let b:gotofunc="call RacerGoToDefinition()"
 
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
@@ -356,7 +357,7 @@
     " }
 
     " ctrlp {
-        let g:ctrlp_cmd = 'CtrlPMRU'
+        let g:ctrlp_cmd = 'CtrlPMixed'
         let g:ctrlp_working_path_mode = 2
         nnoremap <silent> <D-t> :CtrlP<CR>
         nnoremap <silent> <D-r> :CtrlPMRU<CR>
