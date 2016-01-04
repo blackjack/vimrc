@@ -283,6 +283,10 @@
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
         imap <F2> <esc>:call Goto()<CR>
+
+        execute "set <M-F>=\eF"
+        nmap <M-F> :Autoformat<CR>
+        vmap <M-F> <esc>:Autoformat<CR>
     " }
     
     " Syntastic {

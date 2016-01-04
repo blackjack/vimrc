@@ -52,6 +52,7 @@
           Bundle 'scrooloose/nerdcommenter'
           Bundle 'godlygeek/tabular'
           Bundle 'derekwyatt/vim-fswitch'
+          Plugin 'Chiel92/vim-autoformat'
           if executable('ctags')
               Bundle 'majutsushi/tagbar'
               Bundle 'xolox/vim-misc'
