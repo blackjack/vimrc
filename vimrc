@@ -555,7 +555,7 @@
         if exists("b:gotofunc")
             exec b:gotofunc
         else
-            normal <C-]>
+            call feedkeys("\<C-]>")
         endif
     endfun
 " }
