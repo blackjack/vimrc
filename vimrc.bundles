@@ -40,6 +40,7 @@
           Bundle 'airblade/vim-gitgutter'
           Bundle 'thirtythreeforty/lessspace.vim'
           Bundle 'kopischke/vim-fetch'
+          Bundle 'RobbieClarken/vim-haproxy'
     " }
     "
     " General Programming {
