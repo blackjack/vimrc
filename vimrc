@@ -61,7 +61,9 @@
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
-    set colorcolumn=140              " Highlight column #80
+    if version >= 703
+        set colorcolumn=140              " Highlight column #80
+    endif
 
 
     highlight iCursor guifg=white guibg=steelblue
@@ -288,7 +290,10 @@
         nmap <M-F> :Autoformat<CR>
         vmap <M-F> <esc>:Autoformat<CR>
     " }
-    
+    " Xml Folding {
+        let g:xml_syntax_folding=1
+    " }
+
     " Syntastic {
         let g:syntastic_always_populate_loc_list=1
         let g:syntastic_auto_loc_list=0
