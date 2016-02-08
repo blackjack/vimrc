@@ -63,6 +63,14 @@
 
     " Snippets & AutoComplete {
           Bundle 'Valloric/YouCompleteMe'
+
+          "Fallback if YCM is not available
+          Bundle 'vim-scripts/AutoComplPop'
+          if exists( "g:loaded_youcompleteme" )
+            let g:loaded_autoload_acp=1
+            let g:loaded_acp = 1
+          endif
+
     " }
 
     " Python {
