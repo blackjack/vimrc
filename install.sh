@@ -10,4 +10,4 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/vundle
 vim +BundleInstall +qall
 
 cd ~/.vim/bundle/YouCompleteMe
-./install.sh --clang-completer --system-libclang --gocode-completer
+./install.sh --clang-completer --gocode-completer --racer-completer
