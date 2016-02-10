@@ -65,7 +65,7 @@
           Bundle 'Valloric/YouCompleteMe'
 
           "Fallback if YCM is not available
-          if isdirectory("bundle/YouCompleteMe")
+          if isdirectory("~/.vim/bundle/YouCompleteMe")
             let g:loaded_autoload_acp = 1
             let g:loaded_acp = 1
           endif
