@@ -1,5 +1,5 @@
 " Environment {
-" vim: set foldmarker={,}  foldmethod=marker spell:"
+" vim: set foldmarker={,}  foldmethod=marker"
     set nocompatible        " must be first line
     set background=dark     " Assume a dark background
     filetype off
@@ -65,11 +65,12 @@
           Bundle 'Valloric/YouCompleteMe'
 
           "Fallback if YCM is not available
-          if isdirectory("~/.vim/bundle/YouCompleteMe")
+          if isdirectory($HOME."/.vim/bundle/YouCompleteMe")
             let g:loaded_autoload_acp = 1
             let g:loaded_acp = 1
+          else
+            Bundle 'vim-scripts/AutoComplPop'
           endif
-          Bundle 'vim-scripts/AutoComplPop'
     " }
 
     " Python {
