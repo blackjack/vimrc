@@ -301,7 +301,6 @@
         let g:syntastic_enable_balloons = 0
         let g:syntastic_enable_highlighting = 0
         let g:autopep8_max_line_length=140
-        let g:autopep8_indent_size=2
         let g:autopep8_disable_show_diff=1
     " }
 
