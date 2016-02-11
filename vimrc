@@ -287,8 +287,16 @@
 
         execute "set <M-F>=\eF"
         nmap <M-F> :Autoformat<CR>
-        vmap <M-F> <esc>:Autoformat<CR>
+        vmap <M-F> :Autoformat<CR>
     " }
+
+
+    " Autoformat {
+        let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
+        let g:formatters_python = ['autopep8']
+    " }
+    "
+
     " Xml Folding {
         let g:xml_syntax_folding=1
     " }
@@ -296,12 +304,11 @@
     " Syntastic {
         let g:syntastic_always_populate_loc_list=1
         let g:syntastic_auto_loc_list=0
-        let g:syntastic_python_flake8_args='--ignore=E501,E225,E111,E114'
+        let g:syntastic_python_flake8_args='--ignore=E402,E501'
         let g:syntastic_enable_signs = 1
         let g:syntastic_enable_balloons = 0
         let g:syntastic_enable_highlighting = 0
-        let g:autopep8_max_line_length=140
-        let g:autopep8_disable_show_diff=1
+        let g:syntastic_check_on_open = 1
     " }
 
     " Ctags {
