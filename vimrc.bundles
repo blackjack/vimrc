@@ -68,9 +68,8 @@
           if isdirectory($HOME."/.vim/bundle/YouCompleteMe")
             let g:loaded_autoload_acp = 1
             let g:loaded_acp = 1
-          else
-            Bundle 'vim-scripts/AutoComplPop'
           endif
+          Bundle 'vim-scripts/AutoComplPop'
     " }
 
     " Python {

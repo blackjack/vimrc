@@ -310,7 +310,8 @@
 
         " Disable tags highlighting (makes Vim very laggy)
         let g:easytags_dynamic_files = 2
-        let b:easytags_auto_highlight = 0
+        let g:easytags_auto_highlight = 0
+        let g:easytags_syntax_keyword = 'always'
     " }
 
     " AutoCloseTag {
