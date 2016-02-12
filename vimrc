@@ -278,8 +278,6 @@
         set completeopt=menu,longest
 
         autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
-        autocmd FileType go let b:gotofunc="GoDef"
-        autocmd FileType rust let b:gotofunc="call RacerGoToDefinition()"
 
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
