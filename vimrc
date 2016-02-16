@@ -286,6 +286,9 @@
         execute "set <M-F>=\eF"
         nmap <M-F> :Autoformat<CR>
         vmap <M-F> :Autoformat<CR>
+
+        " Delete diff chunk
+        autocmd FileType diff map dc ?^@@<CR>d/^@@<CR>
     " }
 
 
