@@ -82,7 +82,9 @@ flags = [
 '-isystem',
 '/usr/include/x86_64-linux-gnu/qt5/QtWidgets',
 '-isystem',
-'/usr/include/x86_64-linux-gnu/qt5/QtXml'
+'/usr/include/x86_64-linux-gnu/qt5/QtXml',
+'-isystem',
+'/usr/include/kdevplatform'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the

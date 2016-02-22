@@ -288,7 +288,7 @@
         vmap <M-F> :Autoformat<CR>
 
         " Delete diff chunk
-        autocmd FileType diff map dc ?^@@<CR>d/^@@<CR>
+        autocmd FileType diff map dc ?^\(@@\\|Index\)<CR>d/^\(@@\\|Index\)<CR>
     " }
 
 
