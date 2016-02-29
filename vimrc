@@ -12,7 +12,6 @@
     set t_Co=256                " Force use 256 color terminal
     set term=xterm-256color
 
-    set background=dark         " Assume a dark background
     filetype plugin indent on   " Automatically detect file types.
     syntax on                   " Syntax highlighting
     set mouse=a                 " Automatically enable mouse usage
@@ -51,19 +50,20 @@
 " }
 
 " Vim UI {
-
-    let g:solarized_termcolors=256
-    color solarized                 " Load a colorscheme
-    let g:solarized_termtrans=1
-    let g:solarized_contrast="high"
-    let g:solarized_visibility="high"
+    if has('gui_running')
+        color molokai
+    else
+        set background=dark         " Assume a dark background
+        let g:solarized_termcolors=256
+        color solarized                 " Load a colorscheme
+        let g:solarized_termtrans=1
+        let g:solarized_contrast="high"
+        let g:solarized_visibility="high"
+    endif
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
-    if version >= 703
-        set colorcolumn=140              " Highlight column #80
-    endif
 
 
     highlight iCursor guifg=white guibg=steelblue
@@ -81,17 +81,11 @@
     if has('statusline')
         set laststatus=2
 
-        " Broken down into easily includeable segments
-        set statusline=%<%f\                     " Filename
-        set statusline+=%w%h%m%r                 " Options
-        set statusline+=\ [%{&ff}/%Y]            " Filetype
-        set statusline+=\ [%{getcwd()}]          " Current dir
-        set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
-
         let g:airline_powerline_fonts = 1
         let g:airline#extensions#tabline#enabled = 1
         let g:airline#extensions#tabline#left_sep = ' '
         let g:airline#extensions#tabline#left_alt_sep = '|'
+        let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
     endif
 
     set backspace=indent,eol,start  " Backspace for dummies
@@ -149,6 +143,14 @@
     imap <F5> <ESC>:bp<CR>
     nmap <F6> :bn<CR>
     imap <F6> <ESC>:bn<CR>
+
+    if has('gui_running')
+        nmap <C-Tab> :bn<CR>
+        imap <C-Tab> <ESC>:bn<CR>
+        nmap <C-S> :w<CR>
+        imap <C-S> <ESC>:w<CR>
+        cnoreabbrev wq w<bar>bd
+    endif
 
     " F3 to toggle location list
     let g:toggle_list_no_mappings = 1
@@ -259,6 +261,7 @@
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
         let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
+        let g:ycm_extra_conf_globlist = ['~/projects/brightcomputing/*']
         let g:ycm_collect_identifiers_from_tags_files = 1
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
@@ -278,14 +281,19 @@
         set completeopt=menu,longest
 
         autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
+        autocmd FileType c,cpp,objc,objcpp,python,cs let b:helpfunc="YcmCompleter GetDoc"
+
+        hi link StructDecl Type
+        hi link UnionDecl Type
+        hi link ClassDecl Type
+        hi link EnumDecl Type
 
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
         imap <F2> <esc>:call Goto()<CR>
 
-        execute "set <M-F>=\eF"
-        nmap <M-F> :Autoformat<CR>
-        vmap <M-F> :Autoformat<CR>
+        nmap <Leader>ff :Autoformat<CR>
+        vmap <Leader>ff :Autoformat<CR>
 
         " Delete diff chunk
         autocmd FileType diff map dc ?^\(@@\\|Index\)<CR>d/^\(@@\\|Index\)<CR>
@@ -338,7 +346,8 @@
         nmap <leader>nt :NERDTreeFind<CR>
 
         let NERDTreeShowBookmarks=1
-        let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+        set ttymouse=xterm2
+        let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr', '\.o', '\.d']
         let NERDTreeChDirMode=0
         let NERDTreeQuitOnOpen=1
         let NERDTreeMouseMode=2
@@ -368,19 +377,17 @@
         nmap <leader>ss :SessionSave<CR>
     " }
 
-    " JSON {
-        map <leader>ff !python -m json.tool<CR>
-    " }
-
     " ctrlp {
         let g:ctrlp_cmd = 'CtrlPMixed'
         let g:ctrlp_working_path_mode = 2
-        nnoremap <silent> <D-t> :CtrlP<CR>
-        nnoremap <silent> <D-r> :CtrlPMRU<CR>
+        " Don't index CtrlP files outside branches
+        let g:ctrlp_root_markers = ['trunk', '../branches'] 
+        map <leader>r :CtrlPMRU<CR>
         let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-            \ 'file': '\.exe$\|\.so$\|\.dll$' }
+            \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.d$',
+            \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.o$' }
 
+        let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
         let g:ctrlp_extensions = ['tag']
 
         let g:ctrlp_user_command = {
@@ -474,8 +481,8 @@
     " GVIM- (here instead of .gvimrc)
     if has('gui_running')
         set guioptions-=T           " Remove the toolbar
-        set lines=40                " 40 lines of text instead of 24
-        set guifont=Ubuntu\ Mono\ Regular\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
+        set lines=999 columns=999   " Maximize
+        set guifont=Ubuntu\ Mono\ for\ Powerline\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
     else
         if &term == 'xterm' || &term == 'screen'
             set t_Co=256            " Enable 256 colors to stop the CSApprox warning and make xterm vim shine

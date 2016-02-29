@@ -63,6 +63,7 @@
 
     " Snippets & AutoComplete {
           Bundle 'Valloric/YouCompleteMe'
+          Plugin 'octol/vim-cpp-enhanced-highlight'
 
           "Fallback if YCM is not available
           if isdirectory($HOME."/.vim/bundle/YouCompleteMe")
