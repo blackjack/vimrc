@@ -300,6 +300,10 @@
     " }
 
 
+    " FSHere {
+        let g:fsnonewfiles = 1
+    " }
+
     " Autoformat {
         let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
         let g:formatters_python = ['autopep8']
@@ -399,6 +403,8 @@
         \ }
 
         nmap <S-K> :CtrlPTag<CR>
+        nmap <C-L> :CtrlPBuffer<CR>
+        imap <C-L> <esc>:CtrlPBuffer<CR>
     "}
 
     " TagBar {
