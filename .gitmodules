@@ -1,0 +1,3 @@
+[submodule "ubuntu-mono-powerline-ttf"]
+	path = ubuntu-mono-powerline-ttf
+	url = https://github.com/pdf/ubuntu-mono-powerline-ttf.git
