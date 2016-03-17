@@ -307,6 +307,7 @@
     " Autoformat {
         let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
         let g:formatters_python = ['autopep8']
+        let g:formatdef_clangformat = "'clang-format --style=file -lines='.a:firstline.':'.a:lastline"
     " }
     "
 
