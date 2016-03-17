@@ -322,6 +322,7 @@
         let g:syntastic_enable_balloons = 0
         let g:syntastic_enable_highlighting = 0
         let g:syntastic_check_on_open = 1
+        let g:syntastic_cpp_checkers=['']
     " }
 
     " Ctags {
@@ -386,7 +387,6 @@
         let g:ctrlp_working_path_mode = 2
         " Don't index CtrlP files outside branches
         let g:ctrlp_root_markers = ['trunk', '../branches'] 
-        map <leader>r :CtrlPMRU<CR>
         let g:ctrlp_custom_ignore = {
             \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.d$',
             \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.o$' }
@@ -402,9 +402,9 @@
             \ 'fallback': 'find %s -type f'
         \ }
 
-        nmap <S-K> :CtrlPTag<CR>
-        nmap <C-L> :CtrlPBuffer<CR>
-        imap <C-L> <esc>:CtrlPBuffer<CR>
+        map <leader>r :CtrlPMRU<CR>
+        map <leader>t :CtrlPTag<CR>
+        map <leader>b :CtrlPBuffer<CR>
     "}
 
     " TagBar {
