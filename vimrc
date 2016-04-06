@@ -214,14 +214,6 @@
     "paste, autoindent, set back to insert mode
     imap <C-V> <esc>"+p`[v`]=`]a
 
-    " Move lines with Ctrl-j and Ctrl-k
-    nnoremap <C-k> mz:m-2<CR>`z==
-    inoremap <C-j> <Esc>:m+<CR>==gi
-    inoremap <C-k> <Esc>:m-2<CR>==gi
-    vnoremap <C-j> :m'>+<CR>gv=`<my`>mzgv`yo`z
-    nnoremap <C-j> mz:m+<CR>`z==
-    vnoremap <C-k> :m'<-2<CR>gv=`>my`<mzgv`yo`z
-
 " }
 
 " Plugins {
@@ -384,10 +376,38 @@
     " }
 
     " ctrlp {
+        let g:ctrlp_buffer_func = { 'enter': 'CtrlPBDelete' }
+
+        function! CtrlPBDelete()
+            nnoremap <buffer> <silent> <C-q> :call <sid>DeleteMarkedBuffers()<cr>
+        endfunction
+
+        function! s:DeleteMarkedBuffers()
+            " list all marked buffers
+            let marked = ctrlp#getmarkedlist()
+
+            " the file under the cursor is implicitly marked
+            if empty(marked)
+                call add(marked, fnamemodify(ctrlp#getcline(), ':p'))
+            endif
+
+            " call bdelete on all marked buffers
+            for fname in marked
+                let bufid = fname =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(fname, '\d\+'))
+                            \ : fnamemodify(fname[2:], ':p')
+                exec "silent! bdelete" bufid
+            endfor
+
+            " refresh ctrlp
+            exec "normal \<F5>"
+        endfunction
+
+        let g:ctrlp_max_files=0
+        let g:ctrlp_max_depth=40
         let g:ctrlp_cmd = 'CtrlPMixed'
         let g:ctrlp_working_path_mode = 2
         " Don't index CtrlP files outside branches
-        let g:ctrlp_root_markers = ['trunk', '../branches'] 
+        let g:ctrlp_root_markers = ['trunk', '../../branches']
         let g:ctrlp_custom_ignore = {
             \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.d$',
             \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.o$' }
@@ -404,7 +424,10 @@
         \ }
 
         map <leader>r :CtrlPMRU<CR>
-        map <leader>t :CtrlPTag<CR>
+        map <C-k> :CtrlPBufTag<CR>
+        imap <C-k> <Esc>:CtrlPBufTag<CR>
+        map <C-M-k> :CtrlPTag<CR>
+        imap <C-M-k> <Esc>:CtrlPTag<CR>
         map <leader>b :CtrlPBuffer<CR>
     "}
 
