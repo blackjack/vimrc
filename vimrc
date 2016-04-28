@@ -154,8 +154,8 @@
 
     " F3 to toggle location list
     let g:toggle_list_no_mappings = 1
-    nmap <silent> <F3> :call ToggleLocationList()<CR>
-    imap <silent> <F3> :call ToggleLocationList()<CR>
+    nmap <silent> <F3> :call ToggleQuickfixList()<CR>
+    imap <silent> <F3> :call ToggleQuickfixList()<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
@@ -308,8 +308,6 @@
     " }
 
     " Syntastic {
-        let g:syntastic_always_populate_loc_list=1
-        let g:syntastic_auto_loc_list=0
         let g:syntastic_python_flake8_args='--ignore=E402,E501'
         let g:syntastic_enable_signs = 1
         let g:syntastic_enable_balloons = 0
@@ -402,26 +400,18 @@
             exec "normal \<F5>"
         endfunction
 
+        set wildignore+=*/deps/*,*.so,*.swp,*.zip,*.o,*.d
         let g:ctrlp_max_files=0
         let g:ctrlp_max_depth=40
-        let g:ctrlp_cmd = 'CtrlPMixed'
-        let g:ctrlp_working_path_mode = 2
         " Don't index CtrlP files outside branches
-        let g:ctrlp_root_markers = ['trunk', '../../branches']
+        let g:ctrlp_root_markers = ['trunk', '7.1', '7.2']
         let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.d$',
-            \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.o$' }
+                    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|deps)$',
+                    \ 'file': '\v\.(exe|so|dll|pyc|o|swp|d)$'
+                    \ }
 
         let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
         let g:ctrlp_extensions = ['tag']
-
-        let g:ctrlp_user_command = {
-            \ 'types': {
-                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-            \ },
-            \ 'fallback': 'find %s -type f'
-        \ }
 
         map <leader>r :CtrlPMRU<CR>
         map <C-k> :CtrlPBufTag<CR>
