@@ -120,7 +120,6 @@
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
-    " Remove trailing whitespaces and ^M chars
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 
 " }
@@ -151,11 +150,6 @@
         imap <C-S> <ESC>:w<CR>
         cnoreabbrev wq w<bar>bd
     endif
-
-    " F3 to toggle location list
-    let g:toggle_list_no_mappings = 1
-    nmap <silent> <F3> :call ToggleQuickfixList()<CR>
-    imap <silent> <F3> :call ToggleQuickfixList()<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
@@ -255,6 +249,9 @@
         let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
         let g:ycm_extra_conf_globlist = ['~/projects/brightcomputing/*']
         let g:ycm_collect_identifiers_from_tags_files = 1
+        let g:ycm_complete_in_comments = 1
+        let g:ycm_collect_identifiers_from_comments_and_strings = 1
+        let g:ycm_always_populate_location_list = 1
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
@@ -283,6 +280,8 @@
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
         imap <F2> <esc>:call Goto()<CR>
+        nmap <C-u> :YcmCompleter GoToReferences<CR>
+        imap <C-u> <esc>:YcmCompleter GoToReferences<CR>
 
         nmap <Leader>ff :Autoformat<CR>
         vmap <Leader>ff :Autoformat<CR>
@@ -308,7 +307,7 @@
     " }
 
     " Syntastic {
-        let g:syntastic_python_flake8_args='--ignore=E402,E501'
+        let g:syntastic_python_flake8_args='--ignore=E402,E501,E111'
         let g:syntastic_enable_signs = 1
         let g:syntastic_enable_balloons = 0
         let g:syntastic_enable_highlighting = 0
@@ -337,8 +336,7 @@
     " }
 
     " NerdTree {
-        map <C-e> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
-        map <leader>e :NERDTreeFind<CR>
+        map <C-e> :NERDTreeFind<CR>
         nmap <leader>nt :NERDTreeFind<CR>
 
         let NERDTreeShowBookmarks=1
@@ -404,7 +402,7 @@
         let g:ctrlp_max_files=0
         let g:ctrlp_max_depth=40
         " Don't index CtrlP files outside branches
-        let g:ctrlp_root_markers = ['trunk', '7.1', '7.2']
+        let g:ctrlp_root_markers = ['../trunk', '../7.1', '../7.2']
         let g:ctrlp_custom_ignore = {
                     \ 'dir':  '\v[\/](\.git|\.hg|\.svn|deps)$',
                     \ 'file': '\v\.(exe|so|dll|pyc|o|swp|d)$'

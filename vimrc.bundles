@@ -38,7 +38,6 @@
           Bundle 'mbbill/undotree'
           Bundle 'vim-scripts/restore_view.vim'
           Bundle 'airblade/vim-gitgutter'
-          Bundle 'thirtythreeforty/lessspace.vim'
           Bundle 'kopischke/vim-fetch'
           Bundle 'RobbieClarken/vim-haproxy'
     " }
