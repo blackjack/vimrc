@@ -151,6 +151,11 @@
         cnoreabbrev wq w<bar>bd
     endif
 
+    " F3 to toggle location list
+    let g:lt_location_list_toggle_map = '<leader>l'
+    let g:lt_quickfix_list_toggle_map = '<F3>'
+
+
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
     nnoremap k gk
@@ -252,6 +257,7 @@
         let g:ycm_complete_in_comments = 1
         let g:ycm_collect_identifiers_from_comments_and_strings = 1
         let g:ycm_always_populate_location_list = 1
+        let g:ycm_disable_for_files_larger_than_kb = 1000
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
@@ -280,8 +286,6 @@
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
         imap <F2> <esc>:call Goto()<CR>
-        nmap <C-u> :YcmCompleter GoToReferences<CR>
-        imap <C-u> <esc>:YcmCompleter GoToReferences<CR>
 
         nmap <Leader>ff :Autoformat<CR>
         vmap <Leader>ff :Autoformat<CR>
@@ -307,7 +311,9 @@
     " }
 
     " Syntastic {
-        let g:syntastic_python_flake8_args='--ignore=E402,E501,E111'
+        let g:syntastic_python_flake8_args='--ignore=E402,E501,E111,E114'
+        let g:syntastic_auto_loc_list = 0
+        let g:syntastic_allways_populate_loc_list = 1
         let g:syntastic_enable_signs = 1
         let g:syntastic_enable_balloons = 0
         let g:syntastic_enable_highlighting = 0
@@ -322,6 +328,7 @@
         let g:easytags_dynamic_files = 2
         let g:easytags_auto_highlight = 0
         let g:easytags_syntax_keyword = 'always'
+        let g:easytags_async = 1
     " }
 
     " AutoCloseTag {
@@ -599,6 +606,31 @@
             call feedkeys("\<C-]>")
         endif
     endfun
+
+    function! TextEnableCodeSnip(filetype,start,end,textSnipHl) abort
+        let ft=toupper(a:filetype)
+        let group='textGroup'.ft
+        if exists('b:current_syntax')
+            let s:current_syntax=b:current_syntax
+            " Remove current syntax definition, as some syntax files (e.g. cpp.vim)
+            " do nothing if b:current_syntax is defined.
+            unlet b:current_syntax
+        endif
+        execute 'syntax include @'.group.' syntax/'.a:filetype.'.vim'
+        try
+            execute 'syntax include @'.group.' after/syntax/'.a:filetype.'.vim'
+        catch
+        endtry
+        if exists('s:current_syntax')
+            let b:current_syntax=s:current_syntax
+        else
+            unlet b:current_syntax
+        endif
+        execute 'syntax region textSnip'.ft.'
+                    \ matchgroup='.a:textSnipHl.'
+                    \ start="'.a:start.'" end="'.a:end.'"
+                    \ contains=@'.group
+    endfunction
 " }
 
 " Finish local initializations {

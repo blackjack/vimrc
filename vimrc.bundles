@@ -44,7 +44,7 @@
     "
     " General Programming {
           Bundle 'scrooloose/syntastic'
-          Bundle 'milkypostman/vim-togglelist'
+          Bundle 'Valloric/ListToggle'
           Bundle 'tpope/vim-fugitive'
           Bundle 'juneedahamed/svnj.vim'
           Bundle 'mattn/webapi-vim'
