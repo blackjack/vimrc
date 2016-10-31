@@ -24,15 +24,15 @@
 
     " General {
           Bundle 'scrooloose/nerdtree'
-          Bundle 'altercation/vim-colors-solarized'
           Bundle 'Matt-Deacalion/vim-systemd-syntax'
           Bundle 'spf13/vim-colors'
+          Bundle 'morhetz/gruvbox'
           Bundle 'tpope/vim-surround'
           Bundle 'kien/ctrlp.vim'
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
           Bundle 'bling/vim-airline'
-          Bundle 'kien/rainbow_parentheses.vim'
+          Plugin 'luochen1990/rainbow'
           Bundle 'Lokaltog/vim-easymotion'
           Bundle 'jistr/vim-nerdtree-tabs'
           Bundle 'mbbill/undotree'

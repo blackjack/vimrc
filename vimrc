@@ -50,7 +50,11 @@
 " }
 
 " Vim UI {
-    color molokai
+    set background=dark
+    let g:gruvbox_contrast_dark = 'hard'
+    let g:gruvbox_italic=1
+    color gruvbox
+
     highlight ColorColumn guibg=gray17 ctermbg=235
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
@@ -96,6 +100,8 @@
     set scrolljump=5                " Lines to scroll when cursor leaves screen
     set scrolloff=3                 " Minimum lines to keep above and below cursor
     set foldenable                  " Auto fold code
+    set foldmethod=syntax
+    set foldlevel=3
     set list
     set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
 " }
@@ -214,25 +220,8 @@
         let g:PIVAutoClose = 0
     " }
 
-    " PIV {
-        au VimEnter * RainbowParenthesesToggle
-        au Syntax * RainbowParenthesesLoadRound
-        au Syntax * RainbowParenthesesLoadSquare
-        au Syntax * RainbowParenthesesLoadBraces
-        let g:rbpt_colorpairs = [
-                    \ ['white',       'RoyalBlue3'],
-                    \ ['darkgreen',   'firebrick3'],
-                    \ ['darkcyan',    'RoyalBlue3'],
-                    \ ['darkred',     'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
-                    \ ['brown',       'firebrick3'],
-                    \ ['gray',        'RoyalBlue3'],
-                    \ ['black',       'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
-                    \ ['darkcyan',    'SeaGreen3'],
-                    \ ['darkred',     'DarkOrchid3'],
-                    \ ['red',         'firebrick3'],
-                    \ ]
+    " Rainbow Parentheses {
+        let g:rainbow_active = 1
     " }
     " Misc {
         let g:NERDShutUp=1
