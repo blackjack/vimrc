@@ -63,6 +63,7 @@
     " Snippets & AutoComplete {
           Bundle 'Valloric/YouCompleteMe'
           Plugin 'octol/vim-cpp-enhanced-highlight'
+          Bundle 'derekwyatt/vim-protodef'
 
           "Fallback if YCM is not available
           if isdirectory($HOME."/.vim/bundle/YouCompleteMe")
@@ -73,7 +74,6 @@
     " }
 
     " Python {
-          Bundle 'python.vim'
           Bundle 'python_match.vim'
           Bundle 'pythoncomplete'
           Bundle 'tell-k/vim-autopep8'

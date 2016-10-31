@@ -1,5 +1,5 @@
 "Basic setup {
-" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldmethod=marker spell:
+" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldmethod=marker nospell:
     set nocompatible        " Must be first line
     filetype on
     filetype off
@@ -50,20 +50,13 @@
 " }
 
 " Vim UI {
-    if has('gui_running')
-        color molokai
-    else
-        set background=dark         " Assume a dark background
-        let g:solarized_termcolors=256
-        color solarized                 " Load a colorscheme
-        let g:solarized_termtrans=1
-        let g:solarized_contrast="high"
-        let g:solarized_visibility="high"
-    endif
+    color molokai
+    highlight ColorColumn guibg=gray17 ctermbg=235
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
+    set colorcolumn=100
 
 
     highlight iCursor guifg=white guibg=steelblue
@@ -151,9 +144,8 @@
         cnoreabbrev wq w<bar>bd
     endif
 
-    " F3 to toggle location list
     let g:lt_location_list_toggle_map = '<leader>l'
-    let g:lt_quickfix_list_toggle_map = '<F3>'
+    let g:lt_quickfix_list_toggle_map = '<leader>q'
 
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
@@ -276,6 +268,7 @@
         set completeopt=menu,longest
 
         autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
+        autocmd FileType c,cpp,objc,objcpp,python,cs let b:goto_declaration_func="YcmCompleter GoToDeclaration"
         autocmd FileType c,cpp,objc,objcpp,python,cs let b:helpfunc="YcmCompleter GetDoc"
 
         hi link StructDecl Type
@@ -286,6 +279,10 @@
         nmap <F2> :call Goto()<CR>
         vmap <F2> <esc>:call Goto()<CR>
         imap <F2> <esc>:call Goto()<CR>
+
+        nmap <F3> :call GotoDeclaration()<CR>
+        vmap <F3> <esc>:call GotoDeclaration()<CR>
+        imap <F3> <esc>:call GotoDeclaration()<CR>
 
         nmap <Leader>ff :Autoformat<CR>
         vmap <Leader>ff :Autoformat<CR>
@@ -602,6 +599,14 @@
     fun! Goto()
         if exists("b:gotofunc")
             exec b:gotofunc
+        else
+            call feedkeys("\<C-]>")
+        endif
+    endfun
+
+    fun! GotoDeclaration()
+        if exists("b:goto_declaration_func")
+            exec b:goto_declaration_func
         else
             call feedkeys("\<C-]>")
         endif
