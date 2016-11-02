@@ -10,7 +10,6 @@
 
 " General {
     set t_Co=256                " Force use 256 color terminal
-    set term=xterm-256color
 
     filetype plugin indent on   " Automatically detect file types.
     syntax on                   " Syntax highlighting
@@ -55,7 +54,7 @@
     let g:gruvbox_italic=1
     color gruvbox
 
-    highlight ColorColumn guibg=gray17 ctermbg=235
+    highlight ColorColumn guibg=gray20 ctermbg=235
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
 
@@ -333,14 +332,12 @@
         nmap <leader>nt :NERDTreeFind<CR>
 
         let NERDTreeShowBookmarks=1
-        set ttymouse=xterm2
         let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr', '\.o', '\.d']
         let NERDTreeChDirMode=0
-        let NERDTreeQuitOnOpen=1
+        let NERDTreeQuitOnOpen=0
         let NERDTreeMouseMode=2
         let NERDTreeShowHidden=1
         let NERDTreeKeepTreeInNewTab=1
-        let g:nerdtree_tabs_open_on_gui_startup=0
     " }
 
     " Tabularize {
@@ -364,91 +361,67 @@
         nmap <leader>ss :SessionSave<CR>
     " }
 
-    " ctrlp {
-        let g:ctrlp_buffer_func = { 'enter': 'CtrlPBDelete' }
+    " fzf {
+        map <C-k> :BTags<CR>
+        map <leader>r :History<CR>
+        map <leader>b :Buffers<CR>
 
-        function! CtrlPBDelete()
-            nnoremap <buffer> <silent> <C-q> :call <sid>DeleteMarkedBuffers()<cr>
-        endfunction
-
-        function! s:DeleteMarkedBuffers()
-            " list all marked buffers
-            let marked = ctrlp#getmarkedlist()
-
-            " the file under the cursor is implicitly marked
-            if empty(marked)
-                call add(marked, fnamemodify(ctrlp#getcline(), ':p'))
-            endif
-
-            " call bdelete on all marked buffers
-            for fname in marked
-                let bufid = fname =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(fname, '\d\+'))
-                            \ : fnamemodify(fname[2:], ':p')
-                exec "silent! bdelete" bufid
+        function! ProjectRoot()
+            let filedir = expand('%:p:h')
+            for vcs in ['.git', '.svn', '.hg']
+                let dir = finddir(vcs, filedir . ';')
+                let dir = substitute(dir, vcs, '', '')
+                if !empty(dir)
+                    return dir
+                endif
             endfor
-
-            " refresh ctrlp
-            exec "normal \<F5>"
+            return getcwd()
         endfunction
+        command! AgRoot call fzf#vim#ag('', '', {'dir': ProjectRoot()})
 
-        set wildignore+=*/deps/*,*.so,*.swp,*.zip,*.o,*.d
-        let g:ctrlp_max_files=0
-        let g:ctrlp_max_depth=40
-        " Don't index CtrlP files outside branches
-        let g:ctrlp_root_markers = ['../trunk', '../7.1', '../7.2']
-        let g:ctrlp_custom_ignore = {
-                    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|deps)$',
-                    \ 'file': '\v\.(exe|so|dll|pyc|o|swp|d)$'
-                    \ }
-
-        let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-        let g:ctrlp_extensions = ['tag']
-
-        map <leader>r :CtrlPMRU<CR>
-        map <C-k> :CtrlPBufTag<CR>
-        imap <C-k> <Esc>:CtrlPBufTag<CR>
-        map <C-M-k> :CtrlPTag<CR>
-        imap <C-M-k> <Esc>:CtrlPTag<CR>
-        map <leader>b :CtrlPBuffer<CR>
+        map <C-M-k> :AgRoot<CR>
+        imap <C-M-k> <Esc><C-M-k>
+        map <C-p> :execute 'Files' ProjectRoot()<CR>
     "}
 
     " TagBar {
-        nnoremap <silent> <leader>tt :TagbarToggle<CR>
-        nmap <F8> :TagbarToggle<cr>
-        vmap <F8> <esc>:TagbarToggle<cr>
-        imap <F8> <esc>:TagbarToggle<cr>
-
-        let g:tagbar_left = 1
-        let g:tagbar_autofocus = 1
-        let g:tagbar_compact = 1
-        "Golang support for tagbar
-        let g:tagbar_type_go = {
-            \ 'ctagstype' : 'go',
-            \ 'kinds'     : [
-                \ 'p:package',
-                \ 'i:imports:1',
-                \ 'c:constants',
-                \ 'v:variables',
-                \ 't:types',
-                \ 'n:interfaces',
-                \ 'w:fields',
-                \ 'e:embedded',
-                \ 'm:methods',
-                \ 'r:constructor',
-                \ 'f:functions'
-            \ ],
-            \ 'sro' : '.',
-            \ 'kind2scope' : {
-                \ 't' : 'ctype',
-                \ 'n' : 'ntype'
-            \ },
-            \ 'scope2kind' : {
-                \ 'ctype' : 't',
-                \ 'ntype' : 'n'
-            \ },
-            \ 'ctagsbin'  : 'gotags',
-            \ 'ctagsargs' : '-sort -silent'
-        \ }
+        if executable('ctags')
+            autocmd VimEnter * nested :TagbarOpen
+            nnoremap <silent> <leader>tt :TagbarToggle<CR>
+            let g:tagbar_left = 0
+            let g:tagbar_autofocus = 0
+            let g:tagbar_autoclose = 0
+            let g:tagbar_iconchars = ['▸', '▾']
+            let g:tagbar_show_visibility = 0
+            "Golang support for tagbar
+            let g:tagbar_type_go = {
+                \ 'ctagstype' : 'go',
+                \ 'kinds'     : [
+                    \ 'p:package',
+                    \ 'i:imports:1',
+                    \ 'c:constants',
+                    \ 'v:variables',
+                    \ 't:types',
+                    \ 'n:interfaces',
+                    \ 'w:fields',
+                    \ 'e:embedded',
+                    \ 'm:methods',
+                    \ 'r:constructor',
+                    \ 'f:functions'
+                \ ],
+                \ 'sro' : '.',
+                \ 'kind2scope' : {
+                    \ 't' : 'ctype',
+                    \ 'n' : 'ntype'
+                \ },
+                \ 'scope2kind' : {
+                    \ 'ctype' : 't',
+                    \ 'ntype' : 'n'
+                \ },
+                \ 'ctagsbin'  : 'gotags',
+                \ 'ctagsargs' : '-sort -silent'
+            \ }
+        endif
     "}
 
     " Completion {
@@ -493,7 +466,7 @@
     if has('gui_running')
         set guioptions-=T           " Remove the toolbar
         set lines=999 columns=999   " Maximize
-        set guifont=Ubuntu\ Mono\ for\ Powerline\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
+        set guifont=Ubuntu\ Mono\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
     else
         if &term == 'xterm' || &term == 'screen'
             set t_Co=256            " Enable 256 colors to stop the CSApprox warning and make xterm vim shine

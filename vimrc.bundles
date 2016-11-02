@@ -28,7 +28,12 @@
           Bundle 'spf13/vim-colors'
           Bundle 'morhetz/gruvbox'
           Bundle 'tpope/vim-surround'
-          Bundle 'kien/ctrlp.vim'
+          
+
+          let $FZF_DEFAULT_COMMAND='ag -g ""'
+          Plugin 'junegunn/fzf'
+          Plugin 'junegunn/fzf.vim'
+
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
           Bundle 'bling/vim-airline'
