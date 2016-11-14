@@ -1,5 +1,6 @@
 "Basic setup {
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldmethod=marker nospell:
+    runtime! plugin/python_setup.vim
     set nocompatible        " Must be first line
     filetype on
     filetype off
@@ -51,7 +52,9 @@
 " Vim UI {
     set background=dark
     let g:gruvbox_contrast_dark = 'hard'
-    let g:gruvbox_italic=1
+    if has ('gui')
+        let g:gruvbox_italic=1
+    endif
     color gruvbox
 
     highlight ColorColumn guibg=gray20 ctermbg=235
@@ -288,6 +291,12 @@
         let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
         let g:formatters_python = ['autopep8']
         let g:formatdef_clangformat = "'clang-format --style=file -lines='.a:firstline.':'.a:lastline"
+
+        let g:formatdef_json_tool = "'python -m json.tool'"
+        let g:formatters_json = ['json_tool']
+        
+        let g:formatdef_xmllint = "'xmllint --pretty 1 -'"
+        let g:formatters_xml = ['xmllint']
     " }
     "
 
@@ -363,7 +372,8 @@
 
     " fzf {
         map <C-k> :BTags<CR>
-        map <leader>r :History<CR>
+        map <M-k> :Tags<CR>
+        map <leader>r :FZFMru<CR>
         map <leader>b :Buffers<CR>
 
         function! ProjectRoot()
@@ -378,15 +388,16 @@
             return getcwd()
         endfunction
         command! AgRoot call fzf#vim#ag('', '', {'dir': ProjectRoot()})
+        command! -bang AgFiles call fzf#run(fzf#wrap('Ag Files', {'source': 'ag -p "" -U -l', 'dir': ProjectRoot()}, <bang>0))
+        command! FZFMru call fzf#run({ 'source':  v:oldfiles, 'sink':    'e', 'options': '-m -x +s', 'down': '40%'})
 
         map <C-M-k> :AgRoot<CR>
         imap <C-M-k> <Esc><C-M-k>
-        map <C-p> :execute 'Files' ProjectRoot()<CR>
+        map <C-p> :AgFiles<CR>
     "}
 
     " TagBar {
         if executable('ctags')
-            autocmd VimEnter * nested :TagbarOpen
             nnoremap <silent> <leader>tt :TagbarToggle<CR>
             let g:tagbar_left = 0
             let g:tagbar_autofocus = 0
