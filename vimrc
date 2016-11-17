@@ -380,7 +380,7 @@
             let filedir = expand('%:p:h')
             for vcs in ['.git', '.svn', '.hg']
                 let dir = finddir(vcs, filedir . ';')
-                let dir = substitute(dir, vcs, '', '')
+                let dir = substitute(dir, '\'.vcs, '', '')
                 if !empty(dir)
                     return dir
                 endif

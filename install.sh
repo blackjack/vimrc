@@ -13,3 +13,5 @@ cd ~/.vim/bundle/YouCompleteMe
 ./install.sh --clang-completer --gocode-completer --racer-completer
 
 ln -s ~/.vim/ubuntu-mono-powerline-ttf ~/.local/share/fonts/ubuntu-mono-powerline-ttf
+
+sudo apt-get install silversearcher-ag
