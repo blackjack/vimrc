@@ -373,8 +373,8 @@
     " fzf {
         map <C-k> :BTags<CR>
         map <M-k> :Tags<CR>
-        map <leader>r :FZFMru<CR>
-        map <leader>b :Buffers<CR>
+        map <leader>r :CtrlPMRUFiles<CR>
+        map <leader>b :CtrlPBuffer<CR>
 
         function! ProjectRoot()
             let filedir = expand('%:p:h')
@@ -389,11 +389,34 @@
         endfunction
         command! AgRoot call fzf#vim#ag('', '', {'dir': ProjectRoot()})
         command! -bang AgFiles call fzf#run(fzf#wrap('Ag Files', {'source': 'ag -p "" -U -l', 'dir': ProjectRoot()}, <bang>0))
-        command! FZFMru call fzf#run({ 'source':  v:oldfiles, 'sink':    'e', 'options': '-m -x +s', 'down': '40%'})
 
         map <C-M-k> :AgRoot<CR>
         imap <C-M-k> <Esc><C-M-k>
         map <C-p> :AgFiles<CR>
+
+        let g:ctrlp_buffer_func = { 'enter': 'CtrlPBDelete' }
+
+        function! CtrlPBDelete()
+            nnoremap <buffer> <silent> <C-q> :call <sid>DeleteMarkedBuffers()<cr>
+        endfunction
+
+        function! s:DeleteMarkedBuffers()
+            " list all marked buffers
+            let marked = ctrlp#getmarkedlist()
+
+            " the file under the cursor is implicitly marked
+            if empty(marked)
+                call add(marked, fnamemodify(ctrlp#getcline(), ':p'))
+            endif
+
+            " call bdelete on all marked buffers
+            for fname in marked
+                let bufid = fname =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(fname, '\d\+'))
+                            \ : fnamemodify(fname[2:], ':p')
+                exec "silent! bdelete" bufid
+                exec "norm \<F5>"
+            endfor
+        endfunction
     "}
 
     " TagBar {

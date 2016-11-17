@@ -33,6 +33,7 @@
           let $FZF_DEFAULT_COMMAND='ag -g ""'
           Plugin 'junegunn/fzf'
           Plugin 'junegunn/fzf.vim'
+          Plugin 'ctrlpvim/ctrlp.vim' " For better MRU and buffers
 
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
