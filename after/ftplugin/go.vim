@@ -8,7 +8,7 @@ function! SetupGoEnvironment(force)
     endif
     let root = getcwd()
     while root != "/"
-        if isdirectory(root."/src") 
+        if isdirectory(root."/src") && isdirectory(root."/pkg")
             break
         else
             let root = fnamemodify(root,':h')
