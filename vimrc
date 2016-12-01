@@ -30,7 +30,7 @@
     set history=1000                     " Store a ton of history (default is 20)
     set hidden                           " Allow buffer switching without saving
     set nospell                          " Disable spelling (very confusing)
-    autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
+    " autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
 
     " Setting up the directories {
         set backup                  " Backups are nice ...
@@ -235,7 +235,7 @@
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
         let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
-        let g:ycm_extra_conf_globlist = ['~/projects/brightcomputing/*']
+        let g:ycm_extra_conf_globlist = ['~/projects/brightcomputing/*', '~/projects/my/*']
         let g:ycm_collect_identifiers_from_tags_files = 1
         let g:ycm_complete_in_comments = 1
         let g:ycm_collect_identifiers_from_comments_and_strings = 1
@@ -373,6 +373,9 @@
     " fzf {
         map <C-k> :BTags<CR>
         map <M-k> :Tags<CR>
+
+        let g:ctrlp_map = '<>'
+        let g:ctrlp_cmd = 'CtrlP' 
         map <leader>r :CtrlPMRUFiles<CR>
         map <leader>b :CtrlPBuffer<CR>
 
@@ -387,7 +390,7 @@
             endfor
             return getcwd()
         endfunction
-        command! AgRoot call fzf#vim#ag('', '', {'dir': ProjectRoot()})
+        command! AgRoot call fzf#vim#ag('', '-U', {'dir': ProjectRoot()})
         command! -bang AgFiles call fzf#run(fzf#wrap('Ag Files', {'source': 'ag -p "" -U -l', 'dir': ProjectRoot()}, <bang>0))
 
         map <C-M-k> :AgRoot<CR>
