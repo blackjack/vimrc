@@ -1,4 +1,5 @@
 import os
+import subprocess
 import ycm_core
 
 # These are the compilation flags that will be used in case there's no
@@ -89,18 +90,16 @@ flags = [
     '/usr/include/kdevplatform'
 ]
 
-# Set this to the absolute path to the folder (NOT the file!) containing the
-# compile_commands.json file to use that instead of 'flags'. See here for
-# more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
-#
-# Most projects will NOT need to set this to anything; you can just change the
-# 'flags' list of compilation flags. Notice that YCM itself uses that approach.
-compilation_database_folder = ''
 
-if compilation_database_folder:
-  database = ycm_core.CompilationDatabase(compilation_database_folder)
-else:
-  database = None
+def get_compilation_database(filename):
+    try:
+        root = subprocess.Popen(['git', 'rev-parse', '--show-toplevel'],
+                                stdout=subprocess.PIPE,
+                                cwd=os.path.dirname(filename)).communicate()[0].rstrip().decode('utf-8')
+        if os.path.isfile(os.path.join(root, "build/compile_commands.json")):
+            return ycm_core.CompilationDatabase(os.path.join(root, "build"))
+    except:
+        return None
 
 
 def DirectoryOfThisScript():
@@ -137,6 +136,7 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
 
 def FlagsForFile(filename):
+  database = get_compilation_database(filename)
   if database:
     # Bear in mind that compilation_info.compiler_flags_ does NOT return a
     # python list, but a "list-like" StringVec object
@@ -152,6 +152,7 @@ def FlagsForFile(filename):
       final_flags.remove('-stdlib=libc++')
     except ValueError:
       pass
+    # raise Exception(str(final_flags))
   else:
     relative_to = DirectoryOfThisScript()
     final_flags = MakeRelativePathsInFlagsAbsolute(flags, relative_to)

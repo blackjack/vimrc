@@ -43,7 +43,6 @@
           Bundle 'Lokaltog/vim-easymotion'
           Bundle 'jistr/vim-nerdtree-tabs'
           Bundle 'mbbill/undotree'
-          Bundle 'vim-scripts/restore_view.vim'
           Bundle 'airblade/vim-gitgutter'
           Bundle 'kopischke/vim-fetch'
           Bundle 'RobbieClarken/vim-haproxy'
@@ -88,7 +87,6 @@
 
 
     " HTML {
-          Bundle 'amirh/HTML-AutoCloseTag'
           Bundle 'hail2u/vim-css3-syntax'
           Bundle 'tpope/vim-haml'
     " }

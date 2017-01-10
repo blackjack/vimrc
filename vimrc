@@ -30,7 +30,7 @@
     set history=1000                     " Store a ton of history (default is 20)
     set hidden                           " Allow buffer switching without saving
     set nospell                          " Disable spelling (very confusing)
-    " autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
+    autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
 
     " Setting up the directories {
         set backup                  " Backups are nice ...
@@ -77,15 +77,12 @@
                                     " Selected characters/lines in visual mode
     endif
 
-    if has('statusline')
-        set laststatus=2
-
-        let g:airline_powerline_fonts = 1
-        let g:airline#extensions#tabline#enabled = 1
-        let g:airline#extensions#tabline#left_sep = ' '
-        let g:airline#extensions#tabline#left_alt_sep = '|'
-        let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-    endif
+    let g:airline_powerline_fonts = 1
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#left_sep = ' '
+    let g:airline#extensions#tabline#left_alt_sep = '|'
+    let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+    autocmd BufEnter * call airline#update_statusline()
 
     set backspace=indent,eol,start  " Backspace for dummies
     set linespace=0                 " No extra spaces between rows
@@ -258,9 +255,9 @@
         au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
         set completeopt=menu,longest
 
-        autocmd FileType c,cpp,objc,objcpp,python,cs let b:gotofunc="YcmCompleter GoTo"
-        autocmd FileType c,cpp,objc,objcpp,python,cs let b:goto_declaration_func="YcmCompleter GoToDeclaration"
-        autocmd FileType c,cpp,objc,objcpp,python,cs let b:helpfunc="YcmCompleter GetDoc"
+        autocmd FileType c,cpp,objc,objcpp,python,cs,rust let b:gotofunc="YcmCompleter GoTo"
+        autocmd FileType c,cpp,objc,objcpp,python,cs,rust let b:goto_declaration_func="YcmCompleter GoToDeclaration"
+        autocmd FileType c,cpp,objc,objcpp,python,cs,rust let b:helpfunc="YcmCompleter GetDoc"
 
         hi link StructDecl Type
         hi link UnionDecl Type
@@ -288,7 +285,7 @@
     " }
 
     " Autoformat {
-        let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
+        let g:formatdef_autopep8 = "'autopep8 - --max-line-length=100 --range '.a:firstline.' '.a:lastline"
         let g:formatters_python = ['autopep8']
         let g:formatdef_clangformat = "'clang-format --style=file -lines='.a:firstline.':'.a:lastline"
 
