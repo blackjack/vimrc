@@ -24,12 +24,9 @@
         endif
 
     " General {
-          Bundle 'scrooloose/nerdtree'
-          Bundle 'Matt-Deacalion/vim-systemd-syntax'
-          Bundle 'spf13/vim-colors'
           Bundle 'morhetz/gruvbox'
+          Bundle 'scrooloose/nerdtree'
           Bundle 'tpope/vim-surround'
-          
 
           let $FZF_DEFAULT_COMMAND='ag -g ""'
           Plugin 'junegunn/fzf'
@@ -41,23 +38,17 @@
           Bundle 'bling/vim-airline'
           Plugin 'luochen1990/rainbow'
           Bundle 'Lokaltog/vim-easymotion'
-          Bundle 'jistr/vim-nerdtree-tabs'
           Bundle 'mbbill/undotree'
-          Bundle 'airblade/vim-gitgutter'
-          Bundle 'kopischke/vim-fetch'
-          Bundle 'RobbieClarken/vim-haproxy'
     " }
-    "
+    " VCS {
+          Bundle 'airblade/vim-gitgutter'
+          Bundle 'tpope/vim-fugitive'
+          Bundle 'juneedahamed/svnj.vim'
+    " }
     " General Programming {
           Bundle 'scrooloose/syntastic'
           Bundle 'Valloric/ListToggle'
-          Bundle 'tpope/vim-fugitive'
-          Bundle 'juneedahamed/svnj.vim'
-          Bundle 'mattn/webapi-vim'
-          Bundle 'mattn/gist-vim'
           Bundle 'scrooloose/nerdcommenter'
-          Bundle 'godlygeek/tabular'
-          Bundle 'derekwyatt/vim-fswitch'
           Plugin 'Chiel92/vim-autoformat'
           if executable('ctags')
               Bundle 'majutsushi/tagbar'
@@ -66,17 +57,10 @@
           endif
     " }
 
-    " Snippets & AutoComplete {
+    " C++ {
           Bundle 'Valloric/YouCompleteMe'
+          Bundle 'derekwyatt/vim-fswitch'
           Plugin 'octol/vim-cpp-enhanced-highlight'
-          Bundle 'derekwyatt/vim-protodef'
-
-          "Fallback if YCM is not available
-          if isdirectory($HOME."/.vim/bundle/YouCompleteMe")
-            let g:loaded_autoload_acp = 1
-            let g:loaded_acp = 1
-          endif
-          Bundle 'vim-scripts/AutoComplPop'
     " }
 
     " Python {
@@ -98,7 +82,6 @@
     "
     " Rust {
           Plugin 'rust-lang/rust.vim'
-          Plugin 'racer-rust/vim-racer'
     " }
 
     " Misc {
@@ -107,6 +90,9 @@
           Bundle 'Puppet-Syntax-Highlighting'
           Bundle 'elzr/vim-json'
           Bundle 'chrisbra/csv.vim'
+          Bundle 'RobbieClarken/vim-haproxy'
+          Bundle 'aklt/plantuml-syntax'
+          Bundle 'Matt-Deacalion/vim-systemd-syntax'
     " }
 
 " }

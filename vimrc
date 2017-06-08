@@ -82,7 +82,6 @@
     let g:airline#extensions#tabline#left_sep = ' '
     let g:airline#extensions#tabline#left_alt_sep = '|'
     let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-    autocmd BufEnter * call airline#update_statusline()
 
     set backspace=indent,eol,start  " Backspace for dummies
     set linespace=0                 " No extra spaces between rows
@@ -368,8 +367,8 @@
     " }
 
     " fzf {
-        map <C-k> :BTags<CR>
         map <M-k> :Tags<CR>
+        map <C-k> :BTags<CR>
 
         let g:ctrlp_map = '<>'
         let g:ctrlp_cmd = 'CtrlP' 
@@ -387,12 +386,27 @@
             endfor
             return getcwd()
         endfunction
-        command! AgRoot call fzf#vim#ag('', '-U', {'dir': ProjectRoot()})
-        command! -bang AgFiles call fzf#run(fzf#wrap('Ag Files', {'source': 'ag -p "" -U -l', 'dir': ProjectRoot()}, <bang>0))
 
-        map <C-M-k> :AgRoot<CR>
+        let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages'
+        let rg = 'rg'.
+                    \' --column'.
+                    \' --line-number'.
+                    \' --no-heading'.
+                    \' --fixed-strings'.
+                    \' --ignore-case'.
+                    \' --no-ignore'.
+                    \' --hidden'.
+                    \' --follow'.
+                    \' --color "always"'.
+                    \' --no-messages'
+        command! -bang -nargs=* Find call fzf#vim#grep(rg.' '.shellescape(<q-args>), 1, <bang>0)
+        command! -bang -nargs=* FindRoot call fzf#vim#grep(rg.' '.shellescape(<q-args>)." -- ".ProjectRoot(), 1, <bang>0)
+        command! -bang FilesRoot call fzf#run(fzf#wrap(ProjectRoot(), {'dir': ProjectRoot()}, <bang>0))
+
+
+        map <C-M-k> :FindRoot<CR>
         imap <C-M-k> <Esc><C-M-k>
-        map <C-p> :AgFiles<CR>
+        map <C-p> :FilesRoot<CR>
 
         let g:ctrlp_buffer_func = { 'enter': 'CtrlPBDelete' }
 
