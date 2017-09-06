@@ -10,8 +10,6 @@
 "}
 
 " General {
-    set t_Co=256                " Force use 256 color terminal
-
     filetype plugin indent on   " Automatically detect file types.
     syntax on                   " Syntax highlighting
     set mouse=a                 " Automatically enable mouse usage
@@ -55,7 +53,8 @@
     if has ('gui')
         let g:gruvbox_italic=1
     endif
-    color gruvbox
+    colorscheme gruvbox
+    let g:gonvim_draw_statusline = 0
 
     highlight ColorColumn guibg=gray20 ctermbg=235
     set tabpagemax=15               " Only show 15 tabs
@@ -370,10 +369,8 @@
         map <M-k> :Tags<CR>
         map <C-k> :BTags<CR>
 
-        let g:ctrlp_map = '<>'
-        let g:ctrlp_cmd = 'CtrlP' 
-        map <leader>r :CtrlPMRUFiles<CR>
-        map <leader>b :CtrlPBuffer<CR>
+        map <leader>r :History<CR>
+        map <leader>b :Buffers<CR>
 
         function! ProjectRoot()
             let filedir = expand('%:p:h')
@@ -407,30 +404,6 @@
         map <C-M-k> :FindRoot<CR>
         imap <C-M-k> <Esc><C-M-k>
         map <C-p> :FilesRoot<CR>
-
-        let g:ctrlp_buffer_func = { 'enter': 'CtrlPBDelete' }
-
-        function! CtrlPBDelete()
-            nnoremap <buffer> <silent> <C-q> :call <sid>DeleteMarkedBuffers()<cr>
-        endfunction
-
-        function! s:DeleteMarkedBuffers()
-            " list all marked buffers
-            let marked = ctrlp#getmarkedlist()
-
-            " the file under the cursor is implicitly marked
-            if empty(marked)
-                call add(marked, fnamemodify(ctrlp#getcline(), ':p'))
-            endif
-
-            " call bdelete on all marked buffers
-            for fname in marked
-                let bufid = fname =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(fname, '\d\+'))
-                            \ : fnamemodify(fname[2:], ':p')
-                exec "silent! bdelete" bufid
-                exec "norm \<F5>"
-            endfor
-        endfunction
     "}
 
     " TagBar {
@@ -474,8 +447,6 @@
 
     " Completion {
         " <TAB>: completion.
-        inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-        inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
 
         " Enable omni completion.
         autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -502,6 +473,7 @@
         let g:indent_guides_auto_colors = 0
         autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=235
         autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=236
+        autocmd VimEnter,Colorscheme * :set background=dark
         let g:indent_guides_start_level = 2
         let g:indent_guides_guide_size = 1
         let g:indent_guides_enable_on_vim_startup = 1
@@ -516,9 +488,7 @@
         set lines=999 columns=999   " Maximize
         set guifont=Ubuntu\ Mono\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
     else
-        if &term == 'xterm' || &term == 'screen'
-            set t_Co=256            " Enable 256 colors to stop the CSApprox warning and make xterm vim shine
-        endif
+        set termguicolors
         "set term=builtin_ansi       " Make arrow and other keys work
     endif
 

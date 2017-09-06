@@ -12,6 +12,8 @@
         Plugin 'blackjack/vimrc', {'rtp': 'extra'}
         Bundle 'gmarik/vundle'
         Bundle 'MarcWeber/vim-addon-mw-utils'
+        Bundle 'equalsraf/neovim-gui-shim'
+        
         Bundle 'tomtom/tlib_vim'
         if executable('ack-grep')
             let g:ackprg="ack-grep -H --nocolor --nogroup --column"
@@ -24,6 +26,7 @@
         endif
 
     " General {
+          Bundle 'bling/vim-airline'
           Bundle 'morhetz/gruvbox'
           Bundle 'scrooloose/nerdtree'
           Bundle 'tpope/vim-surround'
@@ -31,11 +34,9 @@
           let $FZF_DEFAULT_COMMAND='ag -g ""'
           Plugin 'junegunn/fzf'
           Plugin 'junegunn/fzf.vim'
-          Plugin 'ctrlpvim/ctrlp.vim' " For better MRU and buffers
 
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
-          Bundle 'bling/vim-airline'
           Plugin 'luochen1990/rainbow'
           Bundle 'Lokaltog/vim-easymotion'
           Bundle 'mbbill/undotree'
@@ -59,6 +60,7 @@
 
     " C++ {
           Bundle 'Valloric/YouCompleteMe'
+          Bundle 'derekwyatt/vim-protodef'
           Bundle 'derekwyatt/vim-fswitch'
           Plugin 'octol/vim-cpp-enhanced-highlight'
     " }
