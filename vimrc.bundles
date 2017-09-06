@@ -13,17 +13,7 @@
         Bundle 'gmarik/vundle'
         Bundle 'MarcWeber/vim-addon-mw-utils'
         Bundle 'equalsraf/neovim-gui-shim'
-        
         Bundle 'tomtom/tlib_vim'
-        if executable('ack-grep')
-            let g:ackprg="ack-grep -H --nocolor --nogroup --column"
-            Bundle 'mileszs/ack.vim'
-        elseif executable('ack')
-            Bundle 'mileszs/ack.vim'
-        elseif executable('ag')
-            Bundle 'mileszs/ack.vim'
-            let g:ackprg = 'ag --nogroup --nocolor --column'
-        endif
 
     " General {
           Bundle 'bling/vim-airline'
@@ -31,7 +21,6 @@
           Bundle 'scrooloose/nerdtree'
           Bundle 'tpope/vim-surround'
 
-          let $FZF_DEFAULT_COMMAND='ag -g ""'
           Plugin 'junegunn/fzf'
           Plugin 'junegunn/fzf.vim'
 

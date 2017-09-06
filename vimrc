@@ -185,20 +185,8 @@
     " For when you forget to sudo. Really Write the file.
     command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
-    " Some helpers to edit mode
-    " http://vimcasts.org/e/14
-    cnoremap %% <C-R>=expand('%:h').'/'<cr>
-    map <leader>ew :e %%
-    map <leader>es :sp %%
-    map <leader>ev :vsp %%
-    map <leader>et :tabe %%
-
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
-
-    " Map <Leader>ff to display all lines with keyword under cursor
-    " and ask which one to jump to
-    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 
     " Easier horizontal scrolling
     map zl zL
@@ -206,7 +194,7 @@
 
     vmap <C-C> "+yi<esc>
     "paste, autoindent, set back to insert mode
-    imap <C-V> <esc>"+p`[v`]=`]a
+    imap <C-V> <esc>"+P`[v`]=`]a
 
 " }
 
@@ -237,9 +225,6 @@
         let g:ycm_always_populate_location_list = 1
         let g:ycm_disable_for_files_larger_than_kb = 1000
 
-        hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
-        hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
-        hi PmenuThumb  guifg=#F8F8F8 guibg=#8A95A7 gui=NONE ctermfg=lightgray ctermbg=darkcyan cterm=NONE
 
         " Some convenient mappings
         "inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
@@ -289,7 +274,7 @@
 
         let g:formatdef_json_tool = "'python -m json.tool'"
         let g:formatters_json = ['json_tool']
-        
+
         let g:formatdef_xmllint = "'xmllint --pretty 1 -'"
         let g:formatters_xml = ['xmllint']
     " }
@@ -326,11 +311,6 @@
         nmap <Leader>ac <Plug>ToggleAutoCloseMappings
     " }
 
-    " SnipMate {
-        " Setting the author var
-        let g:snips_author = 'Oleksandr Senkovych <bjsenya@gmail.com>'
-    " }
-
     " NerdTree {
         map <C-e> :NERDTreeFind<CR>
         nmap <leader>nt :NERDTreeFind<CR>
@@ -342,21 +322,6 @@
         let NERDTreeMouseMode=2
         let NERDTreeShowHidden=1
         let NERDTreeKeepTreeInNewTab=1
-    " }
-
-    " Tabularize {
-        nmap <Leader>a& :Tabularize /&<CR>
-        vmap <Leader>a& :Tabularize /&<CR>
-        nmap <Leader>a= :Tabularize /=<CR>
-        vmap <Leader>a= :Tabularize /=<CR>
-        nmap <Leader>a: :Tabularize /:<CR>
-        vmap <Leader>a: :Tabularize /:<CR>
-        nmap <Leader>a:: :Tabularize /:\zs<CR>
-        vmap <Leader>a:: :Tabularize /:\zs<CR>
-        nmap <Leader>a, :Tabularize /,<CR>
-        vmap <Leader>a, :Tabularize /,<CR>
-        nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-        vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
     " }
 
     " Session List {
@@ -466,17 +431,6 @@
         nnoremap <Leader>u :UndotreeToggle<CR>
         " If undotree is opened, it is likely one wants to interact with it.
         let g:undotree_SetFocusWhenToggle=1
-    " }
-
-    " indent_guides {
-        " Fix autocolors
-        let g:indent_guides_auto_colors = 0
-        autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=235
-        autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=236
-        autocmd VimEnter,Colorscheme * :set background=dark
-        let g:indent_guides_start_level = 2
-        let g:indent_guides_guide_size = 1
-        let g:indent_guides_enable_on_vim_startup = 1
     " }
 " }
 
