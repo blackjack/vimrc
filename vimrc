@@ -194,7 +194,7 @@
 
     vmap <C-C> "+yi<esc>
     "paste, autoindent, set back to insert mode
-    imap <C-V> <esc>"+P`[v`]=`]a
+    imap <C-V> <esc>"+p`[v`]=`]a
 
 " }
 
@@ -285,14 +285,8 @@
     " }
 
     " Syntastic {
-        let g:syntastic_python_flake8_args='--ignore=E402,E501,E111,E114'
-        let g:syntastic_auto_loc_list = 0
-        let g:syntastic_allways_populate_loc_list = 1
-        let g:syntastic_enable_signs = 1
-        let g:syntastic_enable_balloons = 0
-        let g:syntastic_enable_highlighting = 0
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_cpp_checkers=['']
+        let g:airline#extensions#ale#enabled = 1
+        let g:ale_linters = { 'cpp': [], } " Disable syntax check for cpp - handled by YCM
     " }
 
     " Ctags {
@@ -334,7 +328,13 @@
         map <M-k> :Tags<CR>
         map <C-k> :BTags<CR>
 
-        map <leader>r :History<CR>
+
+        " set max lenght for the mru file list
+        let g:fzf_mru_file_list_size = 10 " default value
+        " set path pattens that should be ignored
+        let g:fzf_mru_ignore_patterns = 'fugitive\|\.git/' " default value
+        map <leader>r :FZFMru<CR>
+
         map <leader>b :Buffers<CR>
 
         function! ProjectRoot()
@@ -350,7 +350,7 @@
         endfunction
 
         let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages'
-        let rg = 'rg'.
+        let s:rg = 'rg'.
                     \' --column'.
                     \' --line-number'.
                     \' --no-heading'.
@@ -362,11 +362,16 @@
                     \' --color "always"'.
                     \' --no-messages'
         command! -bang -nargs=* Find call fzf#vim#grep(rg.' '.shellescape(<q-args>), 1, <bang>0)
-        command! -bang -nargs=* FindRoot call fzf#vim#grep(rg.' '.shellescape(<q-args>)." -- ".ProjectRoot(), 1, <bang>0)
+
+
+        function! FindRoot()
+            let word = input("Enter search term: ")
+            call fzf#vim#grep(s:rg.' '.word." -- ".ProjectRoot(), 1, 0)
+        endfunction
         command! -bang FilesRoot call fzf#run(fzf#wrap(ProjectRoot(), {'dir': ProjectRoot()}, <bang>0))
 
 
-        map <C-M-k> :FindRoot<CR>
+        map <C-M-k> :call FindRoot()<CR>
         imap <C-M-k> <Esc><C-M-k>
         map <C-p> :FilesRoot<CR>
     "}

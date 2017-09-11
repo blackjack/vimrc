@@ -23,6 +23,7 @@
 
           Plugin 'junegunn/fzf'
           Plugin 'junegunn/fzf.vim'
+          Plugin 'lvht/fzf-mru'
 
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
@@ -36,7 +37,7 @@
           Bundle 'juneedahamed/svnj.vim'
     " }
     " General Programming {
-          Bundle 'scrooloose/syntastic'
+          Bundle 'w0rp/ale.git'
           Bundle 'Valloric/ListToggle'
           Bundle 'scrooloose/nerdcommenter'
           Plugin 'Chiel92/vim-autoformat'
@@ -77,6 +78,7 @@
 
     " Misc {
           Bundle 'tpope/vim-markdown'
+          Bundle 'stephpy/vim-yaml'
           Bundle 'spf13/vim-preview'
           Bundle 'Puppet-Syntax-Highlighting'
           Bundle 'elzr/vim-json'
