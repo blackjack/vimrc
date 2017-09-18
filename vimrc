@@ -23,12 +23,23 @@
     endif
 
     set shortmess+=filmnrxoOtT           " Abbrev. of messages (avoids 'hit enter')
-    set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+    set viewoptions=folds,cursor,unix,slash " Better Unix / Windows compatibility
     set virtualedit=onemore              " Allow for cursor beyond last character
     set history=1000                     " Store a ton of history (default is 20)
     set hidden                           " Allow buffer switching without saving
-    set nospell                          " Disable spelling (very confusing)
-    autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
+    set nospell                          " Disable spelling (very confusing) 
+
+    augroup MyVim
+        autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
+        autocmd BufWritePost *
+                    \   if expand('%') != '' && &buftype !~ 'nofile'
+                    \|      mkview
+                    \|  endif
+        autocmd BufRead *
+                    \   if expand('%') != '' && &buftype !~ 'nofile'
+                    \|      silent loadview
+                    \|  endif
+    augroup END
 
     " Setting up the directories {
         set backup                  " Backups are nice ...
@@ -139,6 +150,7 @@
     nmap <F6> :bn<CR>
     imap <F6> <ESC>:bn<CR>
 
+    cnoreabbrev bda bufdo bd
     if has('gui_running')
         nmap <C-Tab> :bn<CR>
         imap <C-Tab> <ESC>:bn<CR>
@@ -175,7 +187,6 @@
 
     " Shortcuts
     " Change Working Directory to that of the current file
-    cabbr cwd lcd %:p:h
     cmap cd. lcd %:p:h
 
     " Visual shifting (does not exit Visual mode)
@@ -330,7 +341,7 @@
 
 
         " set max lenght for the mru file list
-        let g:fzf_mru_file_list_size = 10 " default value
+        let g:fzf_mru_file_list_size = 1000 " default value
         " set path pattens that should be ignored
         let g:fzf_mru_ignore_patterns = 'fugitive\|\.git/' " default value
         map <leader>r :FZFMru<CR>
@@ -355,13 +366,12 @@
                     \' --line-number'.
                     \' --no-heading'.
                     \' --fixed-strings'.
-                    \' --ignore-case'.
                     \' --no-ignore'.
+                    \' --smart-case'.
                     \' --hidden'.
                     \' --follow'.
                     \' --color "always"'.
                     \' --no-messages'
-        command! -bang -nargs=* Find call fzf#vim#grep(rg.' '.shellescape(<q-args>), 1, <bang>0)
 
 
         function! FindRoot()
@@ -369,11 +379,15 @@
             call fzf#vim#grep(s:rg.' '.word." -- ".ProjectRoot(), 1, 0)
         endfunction
         command! -bang FilesRoot call fzf#run(fzf#wrap(ProjectRoot(), {'dir': ProjectRoot()}, <bang>0))
+        command! -bang -nargs=* Find call fzf#vim#grep(s:rg.' '.shellescape(<q-args>), 0, <bang>0)
 
 
         map <C-M-k> :call FindRoot()<CR>
         imap <C-M-k> <Esc><C-M-k>
         map <C-p> :FilesRoot<CR>
+
+        " map <C-S-k> :Lines<CR>
+        " imap <C-S-k> <Esc><C-S-k>
     "}
 
     " TagBar {
