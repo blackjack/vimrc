@@ -33,11 +33,11 @@
         autocmd BufEnter * silent! lcd %:p:h " Change current directory to opened file's
         autocmd BufWritePost *
                     \   if expand('%') != '' && &buftype !~ 'nofile'
-                    \|      mkview
+                    \|      mkview!
                     \|  endif
         autocmd BufRead *
                     \   if expand('%') != '' && &buftype !~ 'nofile'
-                    \|      silent loadview
+                    \|      silent! loadview
                     \|  endif
     augroup END
 
