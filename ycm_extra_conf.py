@@ -91,13 +91,28 @@ flags = [
 ]
 
 
+SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
+
+def IsHeaderFile( filename ):
+    extension = os.path.splitext( filename )[ 1 ]
+    return extension in [ '.h', '.hxx', '.hpp', '.hh' ]
+
+
 def get_compilation_database(filename):
     try:
-        root = subprocess.Popen(['git', 'rev-parse', '--show-toplevel'],
-                                stdout=subprocess.PIPE,
-                                cwd=os.path.dirname(filename)).communicate()[0].rstrip().decode('utf-8')
-        if os.path.isfile(os.path.join(root, "build/compile_commands.json")):
-            return ycm_core.CompilationDatabase(os.path.join(root, "build"))
+        root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'],
+                                       cwd=os.path.dirname(filename)).strip()
+        compile_commands = os.path.join(root, "build/compile_commands.json")
+
+        if IsHeaderFile(filename):
+            basename = os.path.splitext(filename)[0]
+            for extension in SOURCE_EXTENSIONS:
+                filename = basename + extension
+                if not os.path.exists(filename):
+                    return None
+
+        if os.path.isfile(compile_commands):
+            return ycm_core.CompilationDatabase(os.path.dirname(compile_commands))
     except:
         return None
 
