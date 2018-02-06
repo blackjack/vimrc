@@ -114,17 +114,19 @@ def get_compilation_database(filename):
         root = get_git_root(os.path.dirname(filename))
         compile_commands = os.path.join(root, "build/compile_commands.json")
 
-        if IsHeaderFile(filename):
-            basename = os.path.splitext(filename)[0]
-            for extension in SOURCE_EXTENSIONS:
-                filename = basename + extension
-                if not os.path.exists(filename):
-                    return None
-
         if os.path.isfile(compile_commands):
             return ycm_core.CompilationDatabase(os.path.dirname(compile_commands))
     except:
         return None
+
+def get_compilation_unit_filename(filename):
+    if IsHeaderFile(filename):
+        basename = os.path.splitext(filename)[0]
+        for extension in SOURCE_EXTENSIONS:
+            result = basename + extension
+            if os.path.exists(result):
+                return result
+    return filename
 
 
 def DirectoryOfThisScript():
@@ -161,7 +163,10 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
 
 def FlagsForFile(filename):
+    filename = get_compilation_unit_filename(filename)
     database = get_compilation_database(filename)
+
+    final_flags = None
     if database:
         # Bear in mind that compilation_info.compiler_flags_ does NOT return a
         # python list, but a "list-like" StringVec object
@@ -178,7 +183,8 @@ def FlagsForFile(filename):
         except ValueError:
             pass
         # raise Exception(str(final_flags))
-    else:
+
+    if not final_flags:
         relative_to = DirectoryOfThisScript()
         final_flags = MakeRelativePathsInFlagsAbsolute(flags, relative_to)
 
