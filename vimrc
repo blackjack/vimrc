@@ -218,6 +218,7 @@
 
     " Rainbow Parentheses {
         let g:rainbow_active = 1
+        call extend(g:rainbow_conf, { 'separately': { 'cmake': 0, } })
     " }
     " Misc {
         let g:NERDShutUp=1
@@ -288,6 +289,9 @@
 
         let g:formatdef_xmllint = "'xmllint --pretty 1 -'"
         let g:formatters_xml = ['xmllint']
+
+        let g:formatdef_cmake_format = "'cmake-format --line-width 120 /dev/stdin'"
+        let g:formatters_cmake = ['cmake_format']
     " }
     "
 
@@ -502,6 +506,7 @@
         else
             let common_dir = parent . '/.' . prefix
         endif
+        let g:go_version_warning=0
 
         for [dirname, settingname] in items(dir_list)
             let directory = common_dir . dirname . '/'

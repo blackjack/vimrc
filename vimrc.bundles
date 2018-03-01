@@ -49,7 +49,10 @@
     " }
 
     " C++ {
+      if v:version > 704 || (v:version == 704 && has( 'patch1578' ))
           Bundle 'Valloric/YouCompleteMe'
+      endif
+          Plugin 'pboettch/vim-cmake-syntax'
           Bundle 'derekwyatt/vim-protodef'
           Bundle 'derekwyatt/vim-fswitch'
           Plugin 'octol/vim-cpp-enhanced-highlight'
