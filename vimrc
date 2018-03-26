@@ -115,7 +115,7 @@
 " }
 
 " Formatting {
-
+    set updatetime=100
     set showmatch                    " Match parenthesis
     set nowrap                      " Wrap long lines
     set autoindent                  " Indent at the same level of the previous line
@@ -364,13 +364,13 @@
             return getcwd()
         endfunction
 
-        let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages'
+        let $FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-messages --iglob !.git'
         let s:rg = 'rg'.
                     \' --column'.
                     \' --line-number'.
+                    \' --iglob !.git'.
                     \' --no-heading'.
                     \' --fixed-strings'.
-                    \' --no-ignore'.
                     \' --smart-case'.
                     \' --hidden'.
                     \' --follow'.
@@ -465,7 +465,15 @@
         set lines=999 columns=999   " Maximize
         set guifont=Ubuntu\ Mono\ 12,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
     else
-        set termguicolors
+        if has("termguicolors")
+            set termguicolors
+        else
+            set t_Co=256
+        endif
+        if exists('g:GuiLoaded')
+            Guifont Ubuntu\ Mono\ for\ PowerLine:h15
+        endif
+
         "set term=builtin_ansi       " Make arrow and other keys work
     endif
 
