@@ -98,7 +98,8 @@ def IsHeaderFile(filename):
     return extension in ['.h', '.hxx', '.hpp', '.hh']
 
 
-def get_git_root(wd):
+def get_git_root(filename):
+    wd = os.path.dirname(filename)
     root = subprocess.check_output(['git', 'rev-parse', '--git-dir'],
                                    cwd=wd).strip()
 
@@ -109,23 +110,37 @@ def get_git_root(wd):
             return root
 
 
-def get_compilation_database(filename):
+def get_compilation_database(git_root):
     try:
-        root = get_git_root(os.path.dirname(filename))
-        compile_commands = os.path.join(root, "build/compile_commands.json")
+        compile_commands = os.path.join(git_root,
+                                        "build/compile_commands.json")
 
         if os.path.isfile(compile_commands):
-            return ycm_core.CompilationDatabase(os.path.dirname(compile_commands))
-    except:
+            d = os.path.dirname(compile_commands)
+            return ycm_core.CompilationDatabase(d)
+    except Exception:
         return None
 
-def get_compilation_unit_filename(filename):
+
+def get_compilation_unit_filename(filename, git_root):
+
     if IsHeaderFile(filename):
         basename = os.path.splitext(filename)[0]
         for extension in SOURCE_EXTENSIONS:
             result = basename + extension
             if os.path.exists(result):
                 return result
+
+        dirname = os.path.dirname(filename)
+        while dirname.startswith(git_root):
+            for _, _, files in os.walk(dirname):
+                for f in files:
+                    _, ext = os.path.splitext(f)
+                    if ext in SOURCE_EXTENSIONS:
+                        return os.path.join(dirname, f)
+
+            dirname = os.path.dirname(dirname)
+
     return filename
 
 
@@ -163,8 +178,9 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
 
 def FlagsForFile(filename):
-    filename = get_compilation_unit_filename(filename)
-    database = get_compilation_database(filename)
+    git_root = get_git_root(filename)
+    filename = get_compilation_unit_filename(filename, git_root)
+    database = get_compilation_database(git_root)
 
     final_flags = None
     if database:
