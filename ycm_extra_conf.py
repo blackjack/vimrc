@@ -178,9 +178,13 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
 
 def FlagsForFile(filename):
-    git_root = get_git_root(filename)
-    filename = get_compilation_unit_filename(filename, git_root)
-    database = get_compilation_database(git_root)
+
+    try:
+        git_root = get_git_root(filename)
+        filename = get_compilation_unit_filename(filename, git_root)
+        database = get_compilation_database(git_root)
+    except:
+        database = None
 
     final_flags = None
     if database:
