@@ -3,6 +3,7 @@ import os
 import subprocess
 from pipes import quote
 from clang import cindex
+from distutils.spawn import find_executable
 
 
 ###############################################################################
@@ -122,7 +123,7 @@ def get_git_root(filename):
         while True:
             basename = os.path.basename(root)
             root = os.path.dirname(root)
-            if basename == ".git":
+            if basename == '.git':
                 return root
     except Exception:
         return None
@@ -134,7 +135,7 @@ def get_compilation_database(git_root):
 
     try:
         compile_commands = os.path.join(git_root,
-                                        "build/compile_commands.json")
+                                        'build/compile_commands.json')
 
         if os.path.isfile(compile_commands):
             directory = os.path.dirname(compile_commands)
@@ -239,10 +240,69 @@ def FlagsForFile(filename):
     }
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        sys.stdout.write("Usage: %s [FILE]\n" % sys.argv[0])
-        sys.exit(1)
+# Searches for binaries like clang as well as clang-5.0, clang-4.0 etc
+def find_clang_tool(toolname):
+    executable = find_executable(toolname)
+    if executable:
+        return executable
 
-    flags = [quote(f) for f in FlagsForFile(sys.argv[1])['flags']]
-    print " ".join(flags)
+    # Hopefully it's big enough
+    max_tool_version = 20
+
+    for version in xrange(max_tool_version, 1, -1):
+        executable = find_executable(toolname + '-' + str(version) + '.0')
+        if executable:
+            return executable
+
+    return None
+
+
+def invoke_clang_tool(toolname, filename, argn, flags):
+    toolname = find_clang_tool(toolname)
+
+    cmd = [toolname]
+    cmd.append(filename)
+    cmd.extend(argn)
+    cmd.append("--")
+    cmd.extend(flags)
+
+    return subprocess.call(cmd)
+
+
+def invoke_tool(toolname, filename, argn, flags):
+    if toolname.startswith('clang'):
+        return invoke_clang_tool(toolname, filename, argn, flags)
+
+    else:
+        cmd = [toolname]
+        cmd.append(filename)
+        cmd.extend(argn)
+        cmd.extend(flags)
+        return subprocess.call(cmd)
+
+
+if __name__ == '__main__':
+    tool = None
+    filename = None
+
+    if len(sys.argv) < 2:
+        sys.stdout.write('Usage: \n',
+                         '%s [FILE] - Print \n' % sys.argv[0],
+                         '%s [TOOL] [FILE] [ARGN] - Invoke linter for file')
+        sys.exit(1)
+    elif len(sys.argv) == 2:
+        filename = sys.argv[1]
+        flags = [quote(f) for f in FlagsForFile(filename)['flags']]
+
+        print ' '.join(flags)
+        sys.exit(0)
+
+    tool = sys.argv[1]
+    filename = sys.argv[2]
+    argn = sys.argv[3:]
+
+    flags = [quote(f) for f in FlagsForFile(filename)['flags']]
+
+    exit_code = invoke_tool(tool, filename, argn, flags)
+
+    sys.exit(exit_code)
