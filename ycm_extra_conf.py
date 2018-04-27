@@ -11,69 +11,68 @@ from distutils.spawn import find_executable
 ###############################################################################
 
 
-def get_default_flags():
-    return [
-        '-x', 'c++',
-        '-std=c++11',
+default_flags = [
+    '-x', 'c++',
+    '-std=c++11',
 
-        '-I', '.',
-        '-I', '..',
-        '-isystem', '/usr/include',
+    '-I', '.',
+    '-I', '..',
+    '-isystem', '/usr/include',
 
-        '-Wall',
-        '-Wextra',
-        '-Werror',
-        '-Wno-long-long',
-        '-Wno-variadic-macros',
-        '-fexceptions',
+    '-Wall',
+    '-Wextra',
+    '-Werror',
+    '-Wno-long-long',
+    '-Wno-variadic-macros',
+    '-fexceptions',
 
 
-        './tests/gmock/gtest',
-        '-isystem',
-        './tests/gmock/gtest/include',
-        '-isystem',
-        './tests/gmock',
-        '-isystem',
-        './tests/gmock/include',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtConcurrent',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtCore',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtDBus',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtGui',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtNetwork',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtOpenGL',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtPlatformSupport',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtQml',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtQmlDevTools',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtQuick',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtQuickParticles',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtQuickTest',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtSql',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtTest',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtWidgets',
-        '-isystem',
-        '/usr/include/x86_64-linux-gnu/qt5/QtXml',
-        '-isystem',
-        '/usr/include/kdevplatform'
-    ]
+    './tests/gmock/gtest',
+    '-isystem',
+    './tests/gmock/gtest/include',
+    '-isystem',
+    './tests/gmock',
+    '-isystem',
+    './tests/gmock/include',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtConcurrent',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtCore',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtDBus',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtGui',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtNetwork',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtOpenGL',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtPlatformSupport',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtQml',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtQmlDevTools',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtQuick',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtQuickParticles',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtQuickTest',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtSql',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtTest',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtWidgets',
+    '-isystem',
+    '/usr/include/x86_64-linux-gnu/qt5/QtXml',
+    '-isystem',
+    '/usr/include/kdevplatform'
+]
 
 
 def filter_flags(flags):
@@ -108,10 +107,9 @@ def is_executable(filename):
     return os.path.isfile(filename) and os.access(filename, os.X_OK)
 
 
-def make_default_flags():
+def make_default_flags(default_flags):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    return make_relative_path_in_flags_absolute(get_default_flags(),
-                                                script_dir)
+    return make_relative_path_in_flags_absolute(default_flags, script_dir)
 
 
 def get_git_root(filename):
@@ -168,10 +166,11 @@ def find_compilation_unit_filename(filename, git_root):
             dirname = os.path.dirname(dirname)
 
 
-def get_compilation_flags_from_database(filename, git_root, database):
+def get_compilation_flags_from_database(filename, git_root, database,
+                                        default_flags=default_flags):
 
     if not database:
-        return make_default_flags()
+        return make_default_flags(default_flags)
 
     for filename in find_compilation_unit_filename(filename, git_root):
         compilation_info = database.getCompileCommands(filename)
@@ -188,7 +187,7 @@ def get_compilation_flags_from_database(filename, git_root, database):
 
             return flags
 
-    return make_default_flags()
+    return make_default_flags(default_flags)
 
 
 def make_relative_path_in_flags_absolute(flags, working_directory):
@@ -221,8 +220,10 @@ def make_relative_path_in_flags_absolute(flags, working_directory):
     return new_flags
 
 
-# Function called by YouCompleteMe
-def FlagsForFile(filename):
+def get_flags_for_file(filename,
+                       default_flags=default_flags,
+                       filter_flags=filter_flags):
+
     if not os.path.isabs(filename):
         filename = os.path.abspath(filename)
 
@@ -230,12 +231,15 @@ def FlagsForFile(filename):
     database = get_compilation_database(git_root)
 
     flags = get_compilation_flags_from_database(
-        filename, git_root, database)
+        filename, git_root, database, default_flags)
 
-    flags = filter_flags(flags)
+    return filter_flags(flags)
 
+
+# Function called by YouCompleteMe
+def FlagsForFile(filename):
     return {
-        'flags': flags,
+        'flags': get_flags_for_file(filename),
         'do_cache': True
     }
 
