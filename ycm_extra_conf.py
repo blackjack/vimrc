@@ -1,6 +1,8 @@
+import sys
 import os
 import subprocess
-import ycm_core
+from pipes import quote
+from clang import cindex
 
 
 ###############################################################################
@@ -101,6 +103,10 @@ def is_source_file(filename):
     return get_extension(filename) in SOURCE_EXTENSIONS
 
 
+def is_executable(filename):
+    return os.path.isfile(filename) and os.access(filename, os.X_OK)
+
+
 def make_default_flags():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     return make_relative_path_in_flags_absolute(get_default_flags(),
@@ -131,8 +137,8 @@ def get_compilation_database(git_root):
                                         "build/compile_commands.json")
 
         if os.path.isfile(compile_commands):
-            d = os.path.dirname(compile_commands)
-            return ycm_core.CompilationDatabase(d)
+            directory = os.path.dirname(compile_commands)
+            return cindex.CompilationDatabase.fromDirectory(directory)
     except Exception:
         return None
 
@@ -167,15 +173,19 @@ def get_compilation_flags_from_database(filename, git_root, database):
         return make_default_flags()
 
     for filename in find_compilation_unit_filename(filename, git_root):
-        compilation_info = database.GetCompilationInfoForFile(filename)
+        compilation_info = database.getCompileCommands(filename)
 
-        # Continue searching
-        if not compilation_info.compiler_flags_:
+        if not compilation_info:
             continue
 
-        return make_relative_path_in_flags_absolute(
-            compilation_info.compiler_flags_,
-            compilation_info.compiler_working_dir_)
+        for item in compilation_info:
+            flags = make_relative_path_in_flags_absolute(item.arguments,
+                                                         item.directory)
+
+            if flags and is_executable(flags[0]):
+                flags = flags[1:]
+
+            return flags
 
     return make_default_flags()
 
@@ -210,7 +220,11 @@ def make_relative_path_in_flags_absolute(flags, working_directory):
     return new_flags
 
 
+# Function called by YouCompleteMe
 def FlagsForFile(filename):
+    if not os.path.isabs(filename):
+        filename = os.path.abspath(filename)
+
     git_root = get_git_root(filename)
     database = get_compilation_database(git_root)
 
@@ -223,3 +237,12 @@ def FlagsForFile(filename):
         'flags': flags,
         'do_cache': True
     }
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        sys.stdout.write("Usage: %s [FILE]\n" % sys.argv[0])
+        sys.exit(1)
+
+    flags = [quote(f) for f in FlagsForFile(sys.argv[1])['flags']]
+    print " ".join(flags)
