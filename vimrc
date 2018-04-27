@@ -270,6 +270,9 @@
         nmap <Leader>ff :Autoformat<CR>
         vmap <Leader>ff :Autoformat<CR>
 
+        nmap <Leader>x :YcmCompleter FixIt<CR>
+        vmap <Leader>x :YcmCompleter FixIt<CR>
+
         " Delete diff chunk
         autocmd FileType diff map dc ?^\(@@\\|Index\)<CR>d/^\(@@\\|Index\)<CR>
     " }
@@ -301,7 +304,21 @@
 
     " Syntastic {
         let g:airline#extensions#ale#enabled = 1
-        let g:ale_linters = { 'cpp': [], } " Disable syntax check for cpp - handled by YCM
+
+        let g:ycm_show_diagnostics_ui = 0
+
+        let g:ale_linters = { 'cpp': ['ycm-clangcheck', 'ycm-clangtidy'], }
+
+        let g:cpp_clangtidy_checks = "*,-clang-diagnostic-*"
+
+        let g:ale_lint_delay = 50
+        let g:ale_lint_on_enter = 1
+        let g:ale_lint_on_filetype_changed = 1
+        let g:ale_lint_on_save = 1
+        let g:ale_lint_on_text_changed = 'always'
+        let g:ale_lint_on_insert_leave = 1
+
+        let g:ale_cache_executable_check_failures = 1
     " }
 
     " Ctags {
