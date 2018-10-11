@@ -28,7 +28,7 @@
           Bundle 'vim-scripts/sessionman.vim'
           Bundle 'matchit.zip'
           Plugin 'luochen1990/rainbow'
-          Bundle 'Lokaltog/vim-easymotion'
+          Bundle 'easymotion/vim-easymotion'
           Bundle 'mbbill/undotree'
     " }
     " VCS {
@@ -55,13 +55,14 @@
           Plugin 'pboettch/vim-cmake-syntax'
           Bundle 'derekwyatt/vim-protodef'
           Bundle 'derekwyatt/vim-fswitch'
-          Plugin 'octol/vim-cpp-enhanced-highlight'
+          Plugin 'bfrg/vim-cpp-modern'
     " }
 
     " Python {
           Bundle 'python_match.vim'
           Bundle 'pythoncomplete'
           Bundle 'tell-k/vim-autopep8'
+          Bundle "lepture/vim-jinja"
     " }
 
 

@@ -135,15 +135,26 @@ def find_compilation_unit_filename(filename, git_root):
             if os.path.exists(result):
                 yield result
 
-    # Then try every source file all the way up until root of a project
-    dirname = os.path.dirname(filename)
-    while dirname.startswith(git_root):
-        for dirpath, _, files in os.walk(dirname):
-            source_files = (f for f in files if is_source_file(f))
-            for f in source_files:
-                yield os.path.join(dirpath, f)
+    # Then try every source file all the way up
+    # recursively entering subdirs until reaching root of a project
+    last_root = os.path.dirname(filename)
+    current_root = os.path.dirname(filename)
+    while current_root.startswith(git_root):
+        pruned = False
+        for root, dirs, files in os.walk(current_root):
+            if not pruned:
+                try:
+                    # Remove the part of the tree we already searched
+                    del dirs[dirs.index(os.path.basename(last_root))]
+                    pruned = True
+                except ValueError:
+                    pass
+            for f in filter(is_source_file, files):
+                yield os.path.join(root, f)
 
-            dirname = os.path.dirname(dirname)
+        # Otherwise, pop up a level, search again
+        last_root = current_root
+        current_root = os.path.dirname(last_root)
 
 
 def get_compilation_flags_from_database(filename, git_root, database,
