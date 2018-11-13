@@ -93,25 +93,26 @@ def make_default_flags(default_flags):
 
 
 def get_git_root(filename):
-    try:
-        wd = os.path.dirname(filename)
-        root = subprocess.check_output(['git', 'rev-parse', '--git-dir'],
-                                       cwd=wd).strip()
+    wd = os.path.dirname(filename)
+    root = subprocess.check_output(['git', 'rev-parse', '--git-dir'],
+                                   cwd=wd).strip()
+    if not os.path.isabs(root):
+        root = os.path.join(wd, root)
 
-        while True:
-            basename = os.path.basename(root)
-            root = os.path.dirname(root)
-            if basename == '.git':
-                return root
-    except Exception:
-        return None
+    def _go_up(current_root):
+        basename = os.path.basename(current_root)
+        if basename == '.git':
+            return os.path.dirname(current_root)
+        elif not current_root:
+            raise Exception("Cannot find git root for file: %s" % root)
+
+        return _go_up(os.path.dirname(root))
+
+    return _go_up(root)
 
 
 def get_compilation_database(git_root, compilation_database_pattern):
-    if not git_root:
-        raise Exception("Cannot find git root\n")
-
-    compile_commands = os.path.join(git_root, compilation_database_pattern)
+    compile_commands = compilation_database_pattern.format(git_root=git_root)
 
     if os.path.isfile(compile_commands):
         directory = os.path.dirname(compile_commands)
@@ -211,7 +212,7 @@ def make_relative_path_in_flags_absolute(flags, working_directory):
 
 
 def get_flags_for_file(filename,
-                       compilation_database_pattern="build.debug/compile_commands.json",
+                       compilation_database_pattern="{git_root}/build/compile_commands.json",
                        default_flags=default_flags,
                        filter_flags=filter_flags):
 
@@ -220,7 +221,8 @@ def get_flags_for_file(filename,
 
     try:
         git_root = get_git_root(filename)
-        database = get_compilation_database(git_root, compilation_database_pattern)
+        database = get_compilation_database(git_root,
+                                            compilation_database_pattern)
 
         flags = get_compilation_flags_from_database(
             filename, git_root, database, default_flags)
