@@ -107,19 +107,19 @@ def get_git_root(filename):
         return None
 
 
-def get_compilation_database(git_root):
+def get_compilation_database(git_root, compilation_database_pattern):
     if not git_root:
-        return None
+        raise Exception("Cannot find git root\n")
 
-    try:
-        compile_commands = os.path.join(git_root,
-                                        'build/compile_commands.json')
+    compile_commands = os.path.join(git_root, compilation_database_pattern)
 
-        if os.path.isfile(compile_commands):
-            directory = os.path.dirname(compile_commands)
-            return cindex.CompilationDatabase.fromDirectory(directory)
-    except Exception:
-        return None
+    if os.path.isfile(compile_commands):
+        directory = os.path.dirname(compile_commands)
+        return cindex.CompilationDatabase.fromDirectory(directory)
+    else:
+        raise Exception(
+            "Cannot open compilation database: no such file: %s"
+            % compile_commands)
 
 
 def find_compilation_unit_filename(filename, git_root):
@@ -156,12 +156,11 @@ def find_compilation_unit_filename(filename, git_root):
         last_root = current_root
         current_root = os.path.dirname(last_root)
 
+    raise Exception("No appropriate flags were found for file: " % filename)
+
 
 def get_compilation_flags_from_database(filename, git_root, database,
                                         default_flags=default_flags):
-
-    if not database:
-        return make_default_flags(default_flags)
 
     for filename in find_compilation_unit_filename(filename, git_root):
         compilation_info = database.getCompileCommands(filename)
@@ -212,17 +211,23 @@ def make_relative_path_in_flags_absolute(flags, working_directory):
 
 
 def get_flags_for_file(filename,
+                       compilation_database_pattern="build.debug/compile_commands.json",
                        default_flags=default_flags,
                        filter_flags=filter_flags):
 
     if not os.path.isabs(filename):
         filename = os.path.abspath(filename)
 
-    git_root = get_git_root(filename)
-    database = get_compilation_database(git_root)
+    try:
+        git_root = get_git_root(filename)
+        database = get_compilation_database(git_root, compilation_database_pattern)
 
-    flags = get_compilation_flags_from_database(
-        filename, git_root, database, default_flags)
+        flags = get_compilation_flags_from_database(
+            filename, git_root, database, default_flags)
+    except Exception as ex:
+        sys.stderr.write(ex.message)
+        sys.stderr.write("\n")
+        return default_flags
 
     return filter_flags(flags)
 
@@ -281,9 +286,10 @@ if __name__ == '__main__':
     filename = None
 
     if len(sys.argv) < 2:
-        sys.stdout.write('Usage: \n',
-                         '%s [FILE] - Print \n' % sys.argv[0],
-                         '%s [TOOL] [FILE] [ARGN] - Invoke linter for file')
+        sys.stdout.write('Usage: \n'
+                         '{tool} [FILE] - Print flags for file\n'
+                         '{tool} [TOOL] [FILE] [ARGN] - Invoke linter for file\n'
+                         .format(tool=sys.argv[0]))
         sys.exit(1)
     elif len(sys.argv) == 2:
         filename = sys.argv[1]
