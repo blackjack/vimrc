@@ -3,6 +3,7 @@
 import sys
 import os
 import subprocess
+import traceback
 from pipes import quote
 from clang import cindex
 from distutils.spawn import find_executable
@@ -106,7 +107,7 @@ def get_git_root(filename):
         elif not current_root:
             raise Exception("Cannot find git root for file: %s" % root)
 
-        return _go_up(os.path.dirname(root))
+        return _go_up(os.path.dirname(current_root))
 
     return _go_up(root)
 
@@ -164,6 +165,7 @@ def get_compilation_flags_from_database(filename, git_root, database,
                                         default_flags=default_flags):
 
     for filename in find_compilation_unit_filename(filename, git_root):
+        sys.stderr.write("Trying to find compilation flags for file %s \n" % filename)
         compilation_info = database.getCompileCommands(filename)
 
         if not compilation_info:
@@ -176,6 +178,7 @@ def get_compilation_flags_from_database(filename, git_root, database,
             if flags and is_executable(flags[0]):
                 flags = flags[1:]
 
+            sys.stderr.write("Found compilation flags for file %s\n" % filename)
             return flags
 
     return make_default_flags(default_flags)
@@ -226,9 +229,8 @@ def get_flags_for_file(filename,
 
         flags = get_compilation_flags_from_database(
             filename, git_root, database, default_flags)
-    except Exception as ex:
-        sys.stderr.write(ex.message)
-        sys.stderr.write("\n")
+    except Exception:
+        traceback.print_exc()
         return default_flags
 
     return filter_flags(flags)
