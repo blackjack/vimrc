@@ -235,6 +235,8 @@ def get_flags_for_file(filename,
 
     try:
         git_root = get_git_root(filename)
+        default_flags = map(lambda x: x.format(git_root=git_root), default_flags)
+
         database = get_compilation_database(git_root,
                                             compilation_database_pattern)
 
