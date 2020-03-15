@@ -1,13 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import os
 import subprocess
 import traceback
+from pathlib import Path
 from pipes import quote
 from clang import cindex
 from distutils.spawn import find_executable
 
+
+cindex.Config.set_library_path("/usr/lib/llvm-9/lib")
+os.environ["DYLD_LIBRARY_PATH"] = "/usr/lib/llvm-9/lib"
 
 ###############################################################################
 ###############################################################################
@@ -16,11 +20,10 @@ from distutils.spawn import find_executable
 
 default_flags = [
     '-x', 'c++',
-    '-std=c++11',
+    '-std=c++17',
 
     '-I', '.',
     '-I', '..',
-    '-isystem', '/usr/include',
 
     '-Wall',
     '-Wextra',
@@ -57,7 +60,14 @@ default_flags = [
 
 
 def filter_flags(flags):
-    return [f for f in flags if f != '-stdlib=libc++']
+
+    flags = ['-x', 'c++'] + flags
+
+    def allowed(flag):
+        return flag != '-stdlib=libc++' \
+           and flag != '-Werror'
+
+    return filter(allowed, flags)
 
 ###############################################################################
 ###############################################################################
@@ -107,9 +117,10 @@ def get_git_root(filename):
         elif not current_root:
             raise Exception("Cannot find git root for file: %s" % root)
 
-        return _go_up(os.path.dirname(current_root))
+        return _go_up(Path(current_root).parent)
 
-    return _go_up(root)
+    p = Path(os.fsdecode(root))
+    return _go_up(p)
 
 
 def get_compilation_database(git_root, compilation_database_pattern):
@@ -299,7 +310,7 @@ if __name__ == '__main__':
         filename = sys.argv[1]
         flags = [quote(f) for f in FlagsForFile(filename)['flags']]
 
-        print ' '.join(flags)
+        print(' '.join(flags))
         sys.exit(0)
 
     tool = sys.argv[1]
