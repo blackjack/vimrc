@@ -10,8 +10,8 @@ from clang import cindex
 from distutils.spawn import find_executable
 
 
-cindex.Config.set_library_path("/usr/lib/llvm-9/lib")
-os.environ["DYLD_LIBRARY_PATH"] = "/usr/lib/llvm-9/lib"
+cindex.Config.set_library_path("/usr/lib/llvm-12/lib")
+os.environ["DYLD_LIBRARY_PATH"] = "/usr/lib/llvm-12/lib"
 
 ###############################################################################
 ###############################################################################
@@ -65,7 +65,7 @@ def filter_flags(flags):
 
     def allowed(flag):
         return flag != '-stdlib=libc++' \
-           and flag != '-Werror'
+            and flag != '-Werror'
 
     return filter(allowed, flags)
 
@@ -108,11 +108,12 @@ def get_git_root(filename):
     root = subprocess.check_output(['git', 'rev-parse', '--git-dir'],
                                    cwd=wd).strip()
     if not os.path.isabs(root):
-        root = os.path.join(wd, root)
+        root = os.path.join(os.fsencode(wd), os.fsencode(root))
 
     def _go_up(current_root):
         basename = os.path.basename(current_root)
         if basename == '.git':
+            sys.stderr.write("Found git root: %s \n" % os.path.dirname(current_root))
             return os.path.dirname(current_root)
         elif not current_root:
             raise Exception("Cannot find git root for file: %s" % root)
@@ -128,6 +129,7 @@ def get_compilation_database(git_root, compilation_database_pattern):
 
     if os.path.isfile(compile_commands):
         directory = os.path.dirname(compile_commands)
+        sys.stderr.write("Found compilation database: %s \n" % compile_commands)
         return cindex.CompilationDatabase.fromDirectory(directory)
     else:
         raise Exception(
@@ -174,7 +176,6 @@ def find_compilation_unit_filename(filename, git_root):
 
 def get_compilation_flags_from_database(filename, git_root, database,
                                         default_flags=default_flags):
-
     for filename in find_compilation_unit_filename(filename, git_root):
         sys.stderr.write("Trying to find compilation flags for file %s \n" % filename)
         compilation_info = database.getCompileCommands(filename)
@@ -192,6 +193,7 @@ def get_compilation_flags_from_database(filename, git_root, database,
             sys.stderr.write("Found compilation flags for file %s\n" % filename)
             return flags
 
+    sys.stderr.write("Could not find compilation flags for file: %s\n" % filename)
     return make_default_flags(default_flags)
 
 
@@ -249,15 +251,16 @@ def get_flags_for_file(filename,
     return filter_flags(flags)
 
 
-# Function called by YouCompleteMe
-def FlagsForFile(filename):
-    return {
-        'flags': get_flags_for_file(filename),
-        'do_cache': True
-    }
-
+def Settings(**kwargs):
+  if kwargs['language'] == 'cfamily':
+      return {
+          "flags": get_flags_for_file(kwargs['filename'])
+      }
+  return {}
 
 # Searches for binaries like clang as well as clang-5.0, clang-4.0 etc
+
+
 def find_clang_tool(toolname):
     executable = find_executable(toolname)
     if executable:
@@ -310,7 +313,7 @@ if __name__ == '__main__':
         sys.exit(1)
     elif len(sys.argv) == 2:
         filename = sys.argv[1]
-        flags = [quote(f) for f in FlagsForFile(filename)['flags']]
+        flags = [quote(f) for f in Settings(language='cfamily', filename=filename)['flags']]
 
         print(' '.join(flags))
         sys.exit(0)
@@ -319,7 +322,7 @@ if __name__ == '__main__':
     filename = sys.argv[2]
     argn = sys.argv[3:]
 
-    flags = [quote(f) for f in FlagsForFile(filename)['flags']]
+    flags = [quote(f) for f in Settings(language='cfamily', filename=filename)['flags']]
 
     exit_code = invoke_tool(tool, filename, argn, flags)
 

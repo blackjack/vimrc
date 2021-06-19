@@ -14,6 +14,7 @@
     syntax on                   " Syntax highlighting
     set mouse=a                 " Automatically enable mouse usage
     set mousehide               " Hide the mouse cursor while typing
+    set updatetime=100          " Git markers update time
     scriptencoding utf-8
 
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
@@ -72,7 +73,7 @@
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
-    set colorcolumn=100
+    set colorcolumn=90
 
 
     highlight iCursor guifg=white guibg=steelblue
@@ -230,12 +231,12 @@
         " YouCompleteMe
         let g:ycm_add_preview_to_completeopt = 0
         let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_extra_conf.py"
-        let g:ycm_extra_conf_globlist = ['~/projects/brightcomputing/*', '~/projects/my/*']
+        let g:ycm_extra_conf_globlist = ['~/projects/*', '~/workspace/*', '~/tizen-studio/*']
         let g:ycm_collect_identifiers_from_tags_files = 1
         let g:ycm_complete_in_comments = 1
         let g:ycm_collect_identifiers_from_comments_and_strings = 1
         let g:ycm_always_populate_location_list = 1
-        let g:ycm_disable_for_files_larger_than_kb = 1000
+        let g:ycm_disable_for_files_larger_than_kb = 2000
 
 
         " Some convenient mappings
@@ -305,9 +306,7 @@
     " Syntastic {
         let g:airline#extensions#ale#enabled = 1
 
-        let g:ycm_show_diagnostics_ui = 0
-
-        let g:ale_linters = { 'cpp': ['ycm-clangcheck', 'ycm-clangtidy'], }
+        let g:ale_linters = { 'cpp': [], 'c': [] }
 
         let g:cpp_clangtidy_checks = "*,-clang-diagnostic-*"
 

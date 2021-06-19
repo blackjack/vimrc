@@ -37,7 +37,6 @@
           Bundle 'juneedahamed/svnj.vim'
     " }
     " General Programming {
-          Bundle 'w0rp/ale.git'
           Bundle 'Valloric/ListToggle'
           Bundle 'scrooloose/nerdcommenter'
           Plugin 'Chiel92/vim-autoformat'
