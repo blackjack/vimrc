@@ -5,7 +5,7 @@ import os
 import subprocess
 import traceback
 from pathlib import Path
-from pipes import quote
+from shlex import quote
 from clang import cindex
 from distutils.spawn import find_executable
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get -y install silversearcher-ag python3-dev golang fonts-firacode fzf
+sudo apt-get -y install silversearcher-ag python3-dev golang fonts-firacode fzf python3-clang
 
 script=`realpath $0`
 dir=`dirname $script`
