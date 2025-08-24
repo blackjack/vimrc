@@ -16,7 +16,8 @@
         Bundle 'tomtom/tlib_vim'
 
     " General {
-          Bundle 'bling/vim-airline'
+          Bundle 'nvim-lualine/lualine.nvim'
+          Bundle 'nvim-tree/nvim-web-devicons'
           Bundle 'morhetz/gruvbox'
           Bundle 'scrooloose/nerdtree'
           Bundle 'tpope/vim-surround'

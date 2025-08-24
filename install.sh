@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get -y install silversearcher-ag python3-dev golang fonts-firacode fzf
+
 script=`realpath $0`
 dir=`dirname $script`
 
@@ -12,6 +14,3 @@ vim +BundleInstall +qall
 cd ~/.vim/bundle/YouCompleteMe
 ./install.sh --clang-completer --gocode-completer --racer-completer
 
-ln -s ~/.vim/ubuntu-mono-powerline-ttf ~/.local/share/fonts/ubuntu-mono-powerline-ttf
-
-sudo apt-get install silversearcher-ag
